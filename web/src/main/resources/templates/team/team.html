@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  {{ > /include/header}}
+
+  <link rel="stylesheet" type="text/css" href="/assets/css/jsCalendar.css">
+  <script type="text/javascript" src="/assets/js/jsCalendar.js"></script>
+  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=wnavBrZRPufq2v2I_OdJ&submodules=geocoder"></script>
+</head>
+
+<body>
+    {{ > /include/navigation}}
+    <div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <form class="search-form">
+              <div class="input-group">
+                <div class="input-group-prepend"><span class="input-group-text"><i class="fa fa-search"></i></span></div><input class="form-control" id="text-user-name" type="text" placeholder="이름 입력">
+                <div class="input-group-append"><button class="btn btn-light" id="btn-search" type="button">검색</button></div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">검색된 회원</h5>
+              </div>
+              <div class="card-body"><div class="main-box no-header clearfix">
+                <div class="main-box-body clearfix">
+                  <div class="table-responsive">
+                    <table class="table user-list" id="searched-member-table">
+                      <thead>
+                      <tr>
+                        <th><span>ID</span></th>
+                        <th><span>이름</span></th>
+                        <th><span>학번</span></th>
+                        <th><span>상태</span></th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div></div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">현재 팀원</h5>
+              </div>
+              <div class="card-body"><div class="main-box no-header clearfix">
+                <div class="main-box-body clearfix">
+                  <div class="table-responsive">
+                    <table class="table user-list" id="team-member-table">
+                      <thead>
+                      <tr>
+                        <th><span>ID</span></th>
+                        <th><span>이름</span></th>
+                        <th><span>학번</span></th>
+                        <th><span>상태</span></th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      {{#teamMember}}
+                      <tr>
+                        <td>
+                          <span>{{id}}</span>
+                        </td>
+                        <td>
+                          <span>{{name}}</span>
+                        </td>
+                        <td>
+                          <span>{{studentNo}}</span>
+                        </td>
+                        <td>
+                          <span><button class="btn btn-danger btn-delete-user">-</button></span>
+                        </td>
+                      </tr>
+                      {{/teamMember}}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container" style="margin-top: 20px">
+      <div class="row">
+        <div class="col-6">
+          <div style="width: 288px">
+            <div id="my-calendar"></div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div id="map" style="width:100%;height:400px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container schedule-card"></div>
+
+    <div class="container-fluid" style="margin:20px 0;">
+      <div class="container"><div class='tab'>
+        <table border='0' cellpadding='0' cellspacing='0' id="timetable">
+          <tr class='days'>
+            <th></th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            <th>Saturday</th>
+            <th>Sunday</th>
+          </tr>
+          <tr>
+            <td class='time' data-time='1A'>9:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='1B'>9:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='2A'>10:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='2B'>10:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='3A'>11:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='3B'>11:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='4A'>12:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='4B'>12:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='5A'>13:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='5B'>13:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='6A'>14:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='6B'>14:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='7A'>15:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='7B'>15:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='8A'>16:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='8B'>16:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='9A'>17:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='9B'>17:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='10A'>18:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='10B'>18:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='11A'>19:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='11B'>19:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='12A'>20:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='12B'>20:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='13A'>21:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='13B'>21:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='14A'>22:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+      </div></div>
+    </div>
+    {{ > /include/bottom}}
+
+    <script src="/assets/js/timetable.js"></script>
+    <script src="/assets/js/map.js"></script>
+    <script src="/assets/js/calendar.js"></script>
+    <script>
+      $(document).ready(function() {
+        loadTimetableByTeam();
+      });
+
+      $('#btn-search').click(function() {
+        var userName = $('#text-user-name').val();
+
+        $.ajax({
+          url: '/api/user/' + userName,
+          type: 'GET',
+          dataType: 'json',
+          success: function(response) {
+            if (response['result'])
+              addSearchedMember(response['message']);
+            else
+              alert(response['message']);
+          }
+        });
+      });
+
+      $(document).on('click', '.btn-add-user', function() {
+        var userId = $(this).closest('td').siblings().first().text();
+        var projectNo = window.location.pathname.split("/").pop();
+        $.ajax({
+          url: '/api/team/' + projectNo + '/' + userId,
+          type: 'POST',
+          dataType: 'json',
+          success: function(response) {
+            alert(response['message']);
+            location.reload();
+          }
+        })
+      });
+
+      $(document).on('click', '.btn-delete-user', function() {
+        var userId = $.trim($(this).closest('td').siblings().first().text());
+        var projectNo = window.location.pathname.split("/").pop();
+
+        $.ajax({
+          url: '/api/team/' + projectNo + '/' + userId,
+          type: 'delete',
+          dataType: 'json',
+          success: function(response) {
+            alert(response['message']);
+            location.reload();
+          }
+        })
+      });
+
+      function addSearchedMember(userList) {
+        var searchedMemberTable = $('#searched-member-table');
+        $('.member-info').remove();
+
+        for (var i in userList) {
+          var user = userList[i];
+          var html =  '<tr class="member-info">\n' +
+              '    <td><span>' + user['id'] + '</span></td>\n' +
+              '    <td><span>' + user['name'] + '</span></td>\n' +
+              '    <td><span>' + user['studentNo'] + '</span></td>\n' +
+              '    <td><span><button class="btn btn-primary btn-add-user">+</button></span></td>\n' +
+              '</tr>'
+          searchedMemberTable.append(html);
+        }
+      };
+    </script>
+</body>
+
+</html>

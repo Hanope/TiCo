@@ -1,0 +1,25 @@
+html, body {
+  background-color:#f1f7fc;
+}
+
+.main-container {
+  background:#f1f7fc;
+  padding:80px 0;
+}
+
+.container-fluid {
+  background-color:#f1f7fc;
+}
+
+table {
+  width:100%;
+}
+
+button.btn.btn-light {
+  border-color:#ced4da;
+}
+
+.calendar-container {
+  background-color:#f1f7fc;
+}
+

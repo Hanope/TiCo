@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TiCo</title>
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+  <link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+  <link rel="stylesheet" href="assets/css/Calendar-BS4.css">
+  <link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+  <link rel="stylesheet" href="assets/css/Navigation-with-Button.css">
+  <link rel="stylesheet" href="assets/css/Pretty-Search-Form.css">
+  <link rel="stylesheet" href="assets/css/Pretty-User-List.css">
+  <link rel="stylesheet" href="assets/css/Registration-Form-with-Photo.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/timetable.css">
+  <link rel="stylesheet" href="assets/css/user-list.css">
+</head>
+
+<body>
+  <div>
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
+      <div class="container"><a class="navbar-brand" href="index.html">TiCo</a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navcol-1">
+          <ul class="nav navbar-nav mr-auto">
+            <li class="nav-item" role="presentation"><a class="nav-link" href="search.html">시간표 조회</a></li>
+            <li class="dropdown"><a class="dropdown-toggle nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">프로젝트 관리</a>
+              <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="meeting.html">웹 및 프로그래밍 중간프로젝트</a><a class="dropdown-item" role="presentation" href="#">데이터과학기초 프로젝트</a>
+                <div class="dropdown-divider" role="presentation"></div><a class="dropdown-item" role="presentation" href="team.html">+프로젝트 생성</a></div>
+            </li>
+          </ul><span class="navbar-text actions"> <a href="login.html" class="login">Log In</a><a class="btn btn-light action-button" role="button" href="signup.html">Sign Up</a></span></div>
+      </div>
+    </nav>
+  </div>
+  <div class="main-container">
+    <div class="container">
+      <form class="form-inline" method="post">
+        <div class="form-group"><input class="form-control" id="user_id" type="text" name="user_id" placeholder="ID"></div>
+        <div class="form-group"><input class="form-control" id="user_password" type="password" name="user_password" placeholder="Password"></div>
+        <div class="form-group"><button class="btn btn-primary" id="search_btn" type="submit">시간표 조회</button></div>
+      </form>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="container">
+      <div class='tab'>
+        <table border='0' cellpadding='0' cellspacing='0'>
+          <tr class='days'>
+            <th></th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+          </tr>
+          <tr>
+            <td class='time' data-time='1A'>9:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='1B'>9:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='2A'>10:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='2B'>10:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='3A'>11:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='3B'>11:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='4A'>12:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='4B'>12:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='5A'>13:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='5B'>13:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='6A'>14:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='6B'>14:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='7A'>15:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='7B'>15:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='8A'>16:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='8B'>16:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='9A'>17:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='9B'>17:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='10A'>18:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='10B'>18:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='11A'>19:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='11B'>19:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='12A'>20:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='12B'>20:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='13A'>21:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='13B'>21:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='14A'>22:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script src="assets/js/jquery.min.js"></script>
+  <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+  <script>
+    data = '';
+
+    function timetable(result) {
+      days = result['message'];
+      day_index = 0;
+
+      for (var d in days) {
+        day = days[d];
+        timetables = day['timetables'];
+
+        for (var t in timetables) {
+          course = timetables[t];
+
+          course_time = course['time'];
+          course_name = course['course_name'];
+
+          selector = '.time[data-time="' + course_time + '"]';
+          $($(selector).siblings()[day_index]).addClass('purple');
+        }
+
+        day_index++;
+      }
+    }
+
+    $('#search_btn').click(function(event) {
+      event.preventDefault();
+      user_id = $('#user_id').val();
+      user_password = $('#user_password').val();
+
+      $.ajax({
+        url: 'http://localhost:8000/timetable',
+        type: 'GET',
+        dataType: 'json',
+        data: {
+          "user_id": user_id,
+          "user_password": user_password
+        },
+        success: function(response) {
+          // debug
+          data = response;
+
+          if (response['result'] === 'success')
+            timetable(response);
+          else
+            alert(response['message']);
+
+          $('#data_result').text(JSON.stringify(response, null, 4));
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

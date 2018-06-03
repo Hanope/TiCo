@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="kr">
+
+<head>
+  {{ > /include/header}}
+</head>
+
+<body>
+{{ > /include/navigation}}
+  <!--<div class="main-container">-->
+    <!--<div class="container">-->
+      <!--<form class="form-inline" method="post">-->
+        <!--<div class="form-group"><input class="form-control" id="user_id" type="text" name="user_id" placeholder="ID"></div>-->
+        <!--<div class="form-group"><input class="form-control" id="user_password" type="password" name="user_password" placeholder="Password"></div>-->
+        <!--<div class="form-group"><button class="btn btn-primary" id="search_btn" type="submit">시간표 조회</button></div>-->
+      <!--</form>-->
+    <!--</div>-->
+  <!--</div>-->
+  <div class="container text-right" style="margin: 30px 0">
+    <button class="btn btn-success btn-represent-timetable">대표 시간표 등록</button>
+  </div>
+  <div class="container-fluid">
+    <div class="container">
+      <div class='tab'>
+        <table id='timetable' border='0' cellpadding='0' cellspacing='0'>
+          <tr class='days'>
+            <th></th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            <th>Saturday</th>
+            <th>Sunday</th>
+          </tr>
+          <tr>
+            <td class='time' data-time='1A'>9:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='1B'>9:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='2A'>10:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='2B'>10:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='3A'>11:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='3B'>11:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='4A'>12:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='4B'>12:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='5A'>13:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='5B'>13:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='6A'>14:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='6B'>14:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='7A'>15:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='7B'>15:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='8A'>16:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='8B'>16:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='9A'>17:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='9B'>17:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='10A'>18:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='10B'>18:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='11A'>19:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='11B'>19:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='12A'>20:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='12B'>20:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='13A'>21:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='13B'>21:30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class='time' data-time='14A'>22:00</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+
+    <!-- 스케쥴 입력창 모달 -->
+    <div class="modal fade" id="modal-schedule" role="dialog">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">일정 추가</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p>날짜: <span id="modal-schedule-day">요일</span></p>
+            <p>시작 시간: <span id="modal-schedule-start-time">시작시간</span><span id="modal-schedule-start-hourCode">1A</span></p>
+            <p>끝나는 시간: <span id="modal-schedule-end-time">끝시간</span><span id="modal-schedule-end-hourCode">1A</span></p>
+            <input type="text" class="form-text" id="modal-schedule-text" size="15" placeholder="일정내용 입력">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="modal-schedule-write" data-dismiss="modal" onclick="scheduleWrite()">작성</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/assets/js/jquery.min.js"></script>
+  <script src="/assets/js/timetable.js"></script>
+  <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      var clicks = 0;
+      var dayIndex;
+      var startTime;
+      var endTime;
+      var day;
+
+      $('#timetable tr td').click(function() {
+        if ($(this).attr('class') == 'purple') {
+          alert('이미 해당시간에 일정이 존재합니다.');
+          return;
+        }
+
+        if (clicks == 0) {
+          dayIndex = $(this).index() - 1;
+          startTime = $($(this).siblings()[0]).data()['time'];
+          $(this).addClass('green');
+          clicks++;
+        } else {
+          if (dayIndex != $(this).index() - 1) {
+            alert('같은 요일을 선택해주세요.');
+            clicks = 0;
+            return;
+          }
+
+          day = indexToDay(dayIndex);
+          endTime = $($(this).siblings()[0]).data()['time'];
+          $(this).addClass('green');
+          clicks = 0;
+
+          // swap startTime and endTime
+          if (hourCodeToHour(startTime) > hourCodeToHour(endTime)) {
+            var temp = startTime;
+            startTime = endTime;
+            endTime = temp;
+          }
+          scheduleModalPopup(day, startTime, endTime);
+        }
+      });
+
+      // 페이지 로딩시 시간표를 불러옴
+      loadTimetableByUser();
+
+      $('.btn-represent-timetable').click(function() {
+        $.ajax({
+          url: '/api/user/timetable/' + no,
+          method: 'put',
+          dataType: 'json',
+          success: function(response) {
+            console.log(response);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

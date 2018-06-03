@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="kr">
+
+<head>
+  {{ > /include/header}}
+</head>
+
+<body>
+{{ > /include/navigation}}
+
+<div class="form-group col-sm-6">
+  <form action="/timetable/create" method="post">
+    <input type="text" placeholder="일정표 이름" class="form-control" name="timetable_name" />
+    <input class="btn btn-primary" type="submit" value="만들기"/>
+  </form>
+</div>
+
+</body>
+
+</html>

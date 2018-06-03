@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="UTF-8">
+      <title>네이버 지도 API - 주소로 지도 표시하기</title>
+      <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=wnavBrZRPufq2v2I_OdJ&submodules=geocoder"></script>
+  </head>
+  <body>
+    <div id="map" style="width:100%;height:400px;"></div>
+    <script>
+      var map = new naver.maps.Map('map', {
+        zoom: 12
+      });
+      var myaddress = '대구광역시 북구 대현동 104-4';
+      naver.maps.Service.geocode({address: myaddress}, function(status, response) {
+          var result = response.result;
+          var myaddr = new naver.maps.Point(result.items[0].point.x, result.items[0].point.y);
+          map.setCenter(myaddr);
+
+          var marker = new naver.maps.Marker({
+            position: myaddr,
+            map: map
+          });
+
+          naver.maps.Event.addListener(marker, "click", function(e) {
+            if (infowindow.getMap()) {
+                infowindow.close();
+            } else {
+                infowindow.open(map, marker);
+            }
+          });
+
+          var infowindow = new naver.maps.InfoWindow({
+              content: '카페 <b>키아누</b>'
+          });
+
+      });
+      </script>
+  </body>
+</html>

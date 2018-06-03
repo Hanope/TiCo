@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="kr">
+
+<head>
+  {{ > /include/header}}
+</head>
+
+<body>
+{{ > /include/navigation}}
+
+<div class="form-group col-sm-6">
+  <form action="/team" method="post">
+    <input type="text" placeholder="프로젝트 이름" class="form-control" name="project_name" />
+    <input class="btn btn-primary" type="submit" value="만들기"/>
+  </form>
+</div>
+
+</body>
+
+</html>

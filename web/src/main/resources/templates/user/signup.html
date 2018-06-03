@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {{ > /include/header}}
+</head>
+
+<body>
+    {{ > /include/navigation}}
+    <div class="register-photo">
+        <div class="form-container">
+            <div class="image-holder"></div>
+            <form method="post">
+                <h2 class="text-center"><strong>회원가입</strong></h2>
+                <div class="form-group"><input class="form-control" type="text" name="id" placeholder="아이디"></div>
+                <div class="form-group"><input class="form-control" type="password" name="password" placeholder="비밀번호"></div>
+                <div class="form-group"><input class="form-control" type="text" name="name" placeholder="이름"></div>
+                <div class="form-group"><input class="form-control" type="text" name="studentNo" placeholder="학번"></div>
+                <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Sign Up</button></div><a href="#" class="already">You already have an account? Login here.</a></form>
+        </div>
+    </div>
+    {{ > /include/bottom}}
+</body>
+
+</html>
