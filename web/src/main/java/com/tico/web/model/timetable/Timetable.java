@@ -1,9 +1,9 @@
-package com.tico.web.domain.timetable;
+package com.tico.web.model.timetable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.tico.web.domain.DayHours;
-import com.tico.web.domain.timetable.schedule.Schedule;
-import com.tico.web.domain.user.User;
+import com.tico.web.model.DayHours;
+import com.tico.web.model.timetable.schedule.Schedule;
+import com.tico.web.model.user.User;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;

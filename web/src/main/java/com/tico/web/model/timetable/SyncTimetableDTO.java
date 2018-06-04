@@ -1,7 +1,7 @@
-package com.tico.web.domain.timetable;
+package com.tico.web.model.timetable;
 
-import com.tico.web.domain.timetable.schedule.ScheduleDTO;
-import com.tico.web.domain.user.UserDTO;
+import com.tico.web.model.timetable.schedule.ScheduleDTO;
+import com.tico.web.model.user.UserDTO;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

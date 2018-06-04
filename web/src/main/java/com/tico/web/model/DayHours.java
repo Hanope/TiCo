@@ -1,4 +1,4 @@
-package com.tico.web.domain;
+package com.tico.web.model;
 
 import java.util.List;
 import lombok.Getter;

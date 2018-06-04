@@ -5,7 +5,7 @@ var clickDay = '';
 var clickMonth = '';
 
 $.ajax({
-  url: '/api/team/' + no + '/schedule',
+  url: '/api/team/' + no + '/schedule/all',
   method: 'get',
   dataType: 'json',
   success: function(response) {
@@ -23,19 +23,19 @@ $.ajax({
   }
 });
 
-myCalendar.onDateClick(function(event, date) {
-  var gYear = date.getFullYear();
-  var gMonth = date.getMonth() + 1;
-  var gDate = date.getDate();
-  var d = pad(gDate, 2) + '/' + pad(gMonth, 2) + '/' + gYear;
-
-  clickDay = date.toString();
-  if (previousDate != '')
-    myCalendar.unselect([previousDate]);
-  myCalendar.select([d]);
-
-  previousDate = d;
-});
+// myCalendar.onDateClick(function(event, date) {
+//   var gYear = date.getFullYear();
+//   var gMonth = date.getMonth() + 1;
+//   var gDate = date.getDate();
+//   var d = pad(gDate, 2) + '/' + pad(gMonth, 2) + '/' + gYear;
+//
+//   clickDay = date.toString();
+//   if (previousDate != '')
+//     myCalendar.unselect([previousDate]);
+//   myCalendar.select([d]);
+//
+//   previousDate = d;
+// });
 myCalendar.onMonthChange(function(event, date) {
   clickMonth = date.toString();
 });

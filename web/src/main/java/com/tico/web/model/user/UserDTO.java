@@ -1,4 +1,4 @@
-package com.tico.web.domain.user;
+package com.tico.web.model.user;
 
 import lombok.Getter;
 

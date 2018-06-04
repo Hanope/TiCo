@@ -1,6 +1,6 @@
-package com.tico.web.domain.project;
+package com.tico.web.model.project;
 
-import com.tico.web.domain.user.User;
+import com.tico.web.model.user.User;
 import lombok.Builder;
 
 @Builder

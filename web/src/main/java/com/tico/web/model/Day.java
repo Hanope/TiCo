@@ -1,4 +1,4 @@
-package com.tico.web.domain;
+package com.tico.web.model;
 
 public enum Day {
   MON,

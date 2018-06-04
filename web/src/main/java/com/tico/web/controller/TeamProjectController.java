@@ -1,9 +1,8 @@
 package com.tico.web.controller;
 
-import com.tico.web.domain.project.TeamProject;
-import com.tico.web.domain.project.TeamSchedule;
-import com.tico.web.domain.user.User;
-import com.tico.web.domain.user.UserDTO;
+import com.tico.web.model.project.TeamProject;
+import com.tico.web.model.user.User;
+import com.tico.web.model.user.UserDTO;
 import com.tico.web.repository.TeamProjectRepository;
 import com.tico.web.service.NavigationService;
 import com.tico.web.service.TeamProjectService;
@@ -18,7 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 
+@ApiIgnore
 @Controller
 @RequestMapping("/team")
 public class TeamProjectController {

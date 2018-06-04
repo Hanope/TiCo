@@ -1,21 +1,22 @@
 package com.tico.web.service;
 
-import com.tico.web.domain.Day;
-import com.tico.web.domain.Hour;
-import com.tico.web.domain.timetable.SyncTimetableDTO;
-import com.tico.web.domain.timetable.schedule.Schedule;
-import com.tico.web.domain.timetable.schedule.ScheduleDTO;
-import com.tico.web.domain.timetable.Timetable;
-import com.tico.web.domain.user.User;
+import static com.tico.web.model.ResponseStatus.*;
+import com.tico.web.model.Day;
+import com.tico.web.model.Hour;
+import com.tico.web.model.ResponseMessage;
+import com.tico.web.model.timetable.schedule.Schedule;
+import com.tico.web.model.timetable.schedule.ScheduleDTO;
+import com.tico.web.model.timetable.Timetable;
+import com.tico.web.model.user.User;
 import com.tico.web.repository.ScheduleRepository;
 import com.tico.web.repository.TimetableRepository;
 import com.tico.web.util.SessionUser;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,15 +31,17 @@ public class ScheduleService {
   @Autowired
   private SessionUser sessionUser;
 
-  public Map<String, Object> addSchedule(Long no, ScheduleDTO scheduleDTO) {
+  public ResponseEntity<ResponseMessage> addSchedule(Long no, ScheduleDTO scheduleDTO) {
+    ResponseMessage result;
     User user = sessionUser.getCurrentUser();
     Timetable timetable = timetableRepository.findOne(no);
 
-    if (!isUsersTimetalbe(user, timetable.getUser())) {
-      Map<String, Object> result = new HashMap<>();
-      result.put("result", false);
-      result.put("message", "본인의 시간표가 아니면 수정할 수 없습니다.");
-      return result;
+    if (timetable == null) {
+      result = new ResponseMessage(false, NOT_FOUND_TIMETABLE);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+    } else if (!isUsersTimetalbe(user, timetable.getUser())) {
+      result = new ResponseMessage(false, CAN_NOT_UPDATE_OTHER_TIMETABLE);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
     }
 
     List<Hour> hours = Hour.stringHoursToListHour(scheduleDTO.getHours());
@@ -56,22 +59,22 @@ public class ScheduleService {
     return timetablesUser.getNo().equals(sessionUser.getNo());
   }
 
-  private Map<String, Object> addSchedule(Timetable timetable, Schedule newSchedule) {
-    Map<String, Object> result = new HashMap<>();
+  private ResponseEntity<ResponseMessage> addSchedule(Timetable timetable, Schedule newSchedule) {
+    ResponseMessage result;
     List<Schedule> timetableSchedules = timetable.getSchedules();
 
     if (isExistSchedule(timetableSchedules, newSchedule)) {
-      result.put("result", false);
-      result.put("message", "이미 중복된 일정이 존재합니다.");
+      result = new ResponseMessage(false, EXISTS_SCHEDULE);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.FORBIDDEN);
     } else {
       Schedule addedSchedule = addScheduleToRepository(newSchedule);
-      result.put("result", true);
-      result.put("message", "일정이 추가되었습니다.");
       addScheduleToTimetable(timetable, addedSchedule);
-      result.put("data", addedSchedule);
+      result = new ResponseMessage(true, SUCCESS_ADD_SCHEDULE);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.CREATED);
+//      result.put("result", true);
+//      result.put("message", "일정이 추가되었습니다.");
+//      result.put("data", addedSchedule);
     }
-
-    return result;
   }
 
   private void addScheduleToTimetable(Timetable timetable, Schedule schedule) {

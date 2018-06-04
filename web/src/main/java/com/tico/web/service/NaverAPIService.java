@@ -2,32 +2,31 @@ package com.tico.web.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tico.web.model.ResponseMessage;
+import com.tico.web.model.ResponseStatus;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 public class NaverAPIService {
 
-  public Map<String, Object> searchLocal(String localName) {
-    Map<String, Object> result = new HashMap<>();
+  public ResponseEntity<ResponseMessage> searchLocal(String localName) {
+    ResponseMessage result;
     JsonNode apiResult = requestAPI(localName);
 
     if (apiResult == null) {
-      result.put("result", false);
-      result.put("message", "Naver API 서버 오류");
-      return result;
+      result = new ResponseMessage(false, ResponseStatus.SERVER_ERROR);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.FORBIDDEN);
     }
 
-    result.put("result", true);
-    result.put("message", apiResult);
-
-    return result;
+    result = new ResponseMessage(false, apiResult);
+    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
   }
 
   public JsonNode requestAPI(String localName) {

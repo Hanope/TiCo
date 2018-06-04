@@ -1,7 +1,7 @@
-package com.tico.web.domain.user;
+package com.tico.web.model.user;
 
-import com.tico.web.domain.project.TeamProject;
-import com.tico.web.domain.timetable.Timetable;
+import com.tico.web.model.project.TeamProject;
+import com.tico.web.model.timetable.Timetable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;

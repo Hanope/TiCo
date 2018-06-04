@@ -1,7 +1,7 @@
-package com.tico.web.domain.timetable.schedule;
+package com.tico.web.model.timetable.schedule;
 
-import com.tico.web.domain.Day;
-import com.tico.web.domain.Hour;
+import com.tico.web.model.Day;
+import com.tico.web.model.Hour;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;

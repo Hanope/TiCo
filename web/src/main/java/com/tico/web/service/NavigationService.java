@@ -1,6 +1,6 @@
 package com.tico.web.service;
 
-import com.tico.web.domain.user.User;
+import com.tico.web.model.user.User;
 import com.tico.web.util.SessionUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.tico.web.controller;
 
-import com.tico.web.domain.timetable.Timetable;
-import com.tico.web.domain.user.User;
+import com.tico.web.model.timetable.Timetable;
+import com.tico.web.model.user.User;
 import com.tico.web.service.TimetableService;
 import com.tico.web.service.UserService;
 import java.util.List;
@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 
+@ApiIgnore
 @Controller
 public class HomeController {
 

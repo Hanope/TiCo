@@ -1,8 +1,9 @@
 package com.tico.web.api;
 
+import com.tico.web.model.ResponseMessage;
 import com.tico.web.service.NaverAPIService;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,8 +16,8 @@ public class NaverAPI {
   @Autowired
   private NaverAPIService naverService;
 
-  @GetMapping("/local")
-  public Map<String, Object> searchLocal(@RequestParam String localName) {
+  @GetMapping("/location")
+  public ResponseEntity<ResponseMessage> searchLocal(@RequestParam String localName) {
     return naverService.searchLocal(localName);
   }
 

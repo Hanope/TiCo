@@ -1,13 +1,15 @@
 package com.tico.web.controller;
 
-import com.tico.web.domain.user.UserJoinDTO;
+import com.tico.web.model.user.UserJoinDTO;
 import com.tico.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import springfox.documentation.annotations.ApiIgnore;
 
+@ApiIgnore
 @Controller
 @RequestMapping("/user")
 public class UserController {

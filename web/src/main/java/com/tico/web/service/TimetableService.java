@@ -1,25 +1,22 @@
 package com.tico.web.service;
 
-import com.tico.web.domain.Hour;
-import com.tico.web.domain.timetable.SyncTimetableDTO;
-import com.tico.web.domain.timetable.Timetable;
-import com.tico.web.domain.timetable.schedule.Schedule;
-import com.tico.web.domain.timetable.schedule.ScheduleDTO;
-import com.tico.web.domain.user.User;
+import com.tico.web.model.ResponseMessage;
+import com.tico.web.model.Hour;
+import com.tico.web.model.ResponseStatus;
+import com.tico.web.model.timetable.SyncTimetableDTO;
+import com.tico.web.model.timetable.Timetable;
+import com.tico.web.model.timetable.schedule.Schedule;
+import com.tico.web.model.timetable.schedule.ScheduleDTO;
+import com.tico.web.model.user.User;
 import com.tico.web.util.SessionUser;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.tico.web.repository.*;
 import org.springframework.transaction.annotation.Transactional;
-import sun.net.www.http.HttpClient;
 
 @Service
 public class TimetableService {
@@ -50,8 +47,8 @@ public class TimetableService {
   }
 
   @Transactional
-  public Map<String, Object> syncTimetable(SyncTimetableDTO timetable) {
-    Map<String, Object> result = new HashMap<>();
+  public ResponseEntity<ResponseMessage> syncTimetable(SyncTimetableDTO timetable) {
+    ResponseMessage result;
     User user = sessionUser.getCurrentUser();
 
     Timetable newTimetable = Timetable.builder()
@@ -63,10 +60,8 @@ public class TimetableService {
     newTimetable.setSchedules(schedules);
     newTimetable.setUser(user);
 
-    result.put("result", true);
-    result.put("message", timetableRepository.save(newTimetable));
-
-    return result;
+    result = new ResponseMessage(true, timetableRepository.save(newTimetable));
+    return new ResponseEntity<ResponseMessage>(result, HttpStatus.CREATED);
   }
 
   private List<Schedule> addSchedule(List<ScheduleDTO> schedulesDTO) {
@@ -96,8 +91,17 @@ public class TimetableService {
     return timetables;
   }
 
-  public Timetable findOne(Long no) {
-    return timetableRepository.findOne(no);
+  public ResponseEntity<ResponseMessage> findOne(Long no) {
+    ResponseMessage result;
+    Timetable timetable = timetableRepository.findOne(no);
+
+    if (timetable == null) {
+      result = new ResponseMessage(false, ResponseStatus.NOT_FOUND_TIMETABLE);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+    }
+
+    result = new ResponseMessage(true, timetable);
+    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
   }
 
 }

@@ -1,6 +1,6 @@
-package com.tico.web.domain.timetable.schedule;
+package com.tico.web.model.timetable.schedule;
 
-import com.tico.web.domain.Day;
+import com.tico.web.model.Day;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

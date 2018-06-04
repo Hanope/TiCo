@@ -1,6 +1,6 @@
 package com.tico.web.repository;
 
-import com.tico.web.domain.user.User;
+import com.tico.web.model.user.User;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

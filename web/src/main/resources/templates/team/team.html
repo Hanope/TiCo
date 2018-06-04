@@ -414,10 +414,11 @@
           type: 'GET',
           dataType: 'json',
           success: function(response) {
-            if (response['result'])
               addSearchedMember(response['message']);
-            else
-              alert(response['message']);
+          },
+          error: function(response) {
+            var message = response['responseJSON']['message'];
+            alert(message);
           }
         });
       });
@@ -426,12 +427,16 @@
         var userId = $(this).closest('td').siblings().first().text();
         var projectNo = window.location.pathname.split("/").pop();
         $.ajax({
-          url: '/api/team/' + projectNo + '/' + userId,
+          url: '/api/team/' + projectNo + '/members/' + userId,
           type: 'POST',
           dataType: 'json',
           success: function(response) {
             alert(response['message']);
             location.reload();
+          },
+          error: function(response) {
+            var message = response['responseJSON']['message'];
+            alert(message);
           }
         })
       });
@@ -441,12 +446,16 @@
         var projectNo = window.location.pathname.split("/").pop();
 
         $.ajax({
-          url: '/api/team/' + projectNo + '/' + userId,
+          url: '/api/team/' + projectNo + '/members/' + userId,
           type: 'delete',
           dataType: 'json',
           success: function(response) {
             alert(response['message']);
             location.reload();
+          },
+          error: function(response) {
+            var message = response['responseJSON']['message'];
+            alert(message);
           }
         })
       });

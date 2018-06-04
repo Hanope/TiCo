@@ -35,17 +35,43 @@
     loadScheduleInfo();
   });
 
+  myCalendar.onDateClick(function(event, date) {
+    var gYear = date.getFullYear();
+    var gMonth = date.getMonth() + 1;
+    var gDate = date.getDate();
+    var clickedDate = gYear + pad(gMonth, 2) + pad(gDate, 2);
+
+    clickDay = date.toString();
+    console.log(clickedDate);
+
+    $.ajax({
+      url: '/api/team/' + no + '/schedule/' + clickedDate,
+      method: 'get',
+      dataType: 'json',
+      success: function(response) {
+        removeAllScheduleCard();
+        for (var i = 0; i < response['message'].length; i++) {
+          drawScheduleTable(response['message'][i]);
+        }
+      },
+      error: function(error) {
+        var jsonText = error['responseJSON']['message'];
+        removeAllScheduleCard();
+        alert(jsonText);
+      }
+    });
+  });
+
+  function removeAllScheduleCard() {
+    $('.schedule-card').empty();
+  }
+
   function loadScheduleInfo() {
     $.ajax({
       url: '/api/team/' + no + '/schedule/',
       method: 'get',
       dataType: 'json',
       success: function(response) {
-        if (response['result'] == false) {
-          alert('error');
-          return;
-        }
-
         for (var i = 0; i < response['message'].length; i++) {
           drawScheduleTable(response['message'][i]);
         }
@@ -73,9 +99,9 @@
         + '      <div class="col-10">\n'
         + '        <h3 class="text-uppercase"><strong>' + title + '</strong></h3>\n'
         + '        <ul class="list-inline">\n'
-        + '          <li class="list-inline-item"><i class="fa fa-calendar-o" aria-hidden="true"></i>' + day +  '</li>\n'
+        + '          <li class="list-inline-item"><i class="fa fa-calendar-o" aria-hidden="true"></i> ' + day +  '</li>\n'
         + '          <li class="list-inline-item"><i class="fa fa-clock-o" aria-hidden="true"></i> ' + startHour + ' -  ' + endHour +  '</li>\n'
-        + '          <li class="list-inline-item location-name" data-name="' + locationName + '" data-address="' + locationAddress + '"><i class="fa fa-location-arrow" aria-hidden="true"></i>' + locationName + '</li>\n'
+        + '          <li class="list-inline-item location-name" data-name="' + locationName + '" data-address="' + locationAddress + '"><i class="fa fa-location-arrow" aria-hidden="true"></i> ' + locationName + '</li>\n'
         + '        </ul>\n'
         + '        <p>' + content + '</p>\n'
         + '      </div>\n'
@@ -109,6 +135,8 @@
       var infowindow = new naver.maps.InfoWindow({
         content: '<h5>' + name +'</h5>'
       });
+
+      infowindow.open(map, marker);
 
     });
   });

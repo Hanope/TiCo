@@ -28,10 +28,12 @@ function loadTimetableByUser() {
     type: 'GET',
     dataType: 'json',
     success: function(response) {
-      console.log(response);
-      createTable(response, 'purple');
-
-      $('#data_result').text(JSON.stringify(response, null, 4));
+      createTable(response['message'], 'purple');
+    },
+    error: function (response) {
+      console.log(response['responseText']);
+      alert('잘못된 접근입니다.');
+      window.location.href = '/';
     }
   });
 }

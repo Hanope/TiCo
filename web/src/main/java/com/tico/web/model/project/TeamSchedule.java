@@ -1,8 +1,8 @@
-package com.tico.web.domain.project;
+package com.tico.web.model.project;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.tico.web.domain.Location;
-import com.tico.web.domain.timetable.schedule.Schedule;
+import com.tico.web.model.Location;
+import com.tico.web.model.timetable.schedule.Schedule;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -53,7 +53,7 @@ public class TeamSchedule {
 
   @JsonIgnore
   public String getCompareDate() {
-    SimpleDateFormat sdf = new SimpleDateFormat("ddMMYYYY");
+    SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMdd");
     return sdf.format(date);
   }
 }

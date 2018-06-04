@@ -1,9 +1,10 @@
 package com.tico.web.api;
 
-import com.tico.web.domain.timetable.schedule.ScheduleDTO;
+import com.tico.web.model.ResponseMessage;
+import com.tico.web.model.timetable.schedule.ScheduleDTO;
 import com.tico.web.service.ScheduleService;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,8 +18,8 @@ public class ScheduleAPI {
   @Autowired
   private ScheduleService scheduleService;
 
-  @PostMapping("/{no}")
-  public Map<String, Object> addSchedule(@PathVariable Long no, @RequestBody ScheduleDTO scheduleDTO) {
-    return scheduleService.addSchedule(no, scheduleDTO);
+  @PostMapping("/{timetableNo}")
+  public ResponseEntity<ResponseMessage> addSchedule(@PathVariable Long timetableNo, @RequestBody ScheduleDTO scheduleDTO) {
+    return scheduleService.addSchedule(timetableNo, scheduleDTO);
   }
 }

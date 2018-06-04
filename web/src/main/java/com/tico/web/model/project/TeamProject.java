@@ -1,6 +1,6 @@
-package com.tico.web.domain.project;
+package com.tico.web.model.project;
 
-import com.tico.web.domain.user.User;
+import com.tico.web.model.user.User;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
@@ -46,6 +46,10 @@ public class TeamProject {
 
   @OneToOne
   private User owner;
+
+  public void addSchedule(TeamSchedule teamSchedule) {
+    this.teamSchedule.add(teamSchedule);
+  }
 
   public void addMember(User user) {
     projectMembers.add(user);
