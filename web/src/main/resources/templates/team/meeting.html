@@ -1,16 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<head>
-  {{ > /include/header}}
-
-  <link rel="stylesheet" type="text/css" href="/assets/css/jsCalendar.css">
-  <script type="text/javascript" src="/assets/js/jsCalendar.js"></script>
-  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=wnavBrZRPufq2v2I_OdJ&submodules=geocoder"></script>
-</head>
+<head th:include="/include/header :: headerfragment">
 
 <body>
-{{ > /include/navigation}}
+<head th:include="/include/navigation :: navigation">
 <div class="container" style="margin-top: 20px">
   <div class="row">
     <div class="col-6">
@@ -25,9 +19,9 @@
 </div>
 
 <div class="container schedule-card"></div>
-{{ > /include/bottom}}
 
-<script src="/assets/js/timetable.js"></script>
+<div th:include="/include/footer :: footer"></div>
+
 <script src="/assets/js/map.js"></script>
 <script src="/assets/js/calendar.js"></script>
 <script>
@@ -48,6 +42,9 @@
       url: '/api/team/' + no + '/schedule/' + clickedDate,
       method: 'get',
       dataType: 'json',
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('TiCo-Token', token);
+      },
       success: function(response) {
         removeAllScheduleCard();
         for (var i = 0; i < response['message'].length; i++) {
@@ -71,6 +68,9 @@
       url: '/api/team/' + no + '/schedule/',
       method: 'get',
       dataType: 'json',
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('TiCo-Token', token);
+      },
       success: function(response) {
         for (var i = 0; i < response['message'].length; i++) {
           drawScheduleTable(response['message'][i]);

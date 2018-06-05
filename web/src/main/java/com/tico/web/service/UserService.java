@@ -2,7 +2,6 @@ package com.tico.web.service;
 
 import static com.tico.web.model.ResponseStatus.*;
 import com.tico.web.model.ResponseMessage;
-import com.tico.web.model.ResponseStatus;
 import com.tico.web.model.timetable.Timetable;
 import com.tico.web.model.user.User;
 import com.tico.web.model.user.UserDTO;
@@ -21,6 +20,9 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
   @Autowired
+  private SessionUser sessionUser;
+
+  @Autowired
   private UserRepository userRepository;
 
   @Autowired
@@ -28,6 +30,10 @@ public class UserService {
 
   public User findOne(Long no) {
     return userRepository.findOne(no);
+  }
+
+  public User getUser(String id) {
+    return userRepository.findOneById(id);
   }
 
   public ResponseEntity<ResponseMessage> findOneByNameOrId(String name) {
@@ -69,10 +75,16 @@ public class UserService {
     return true;
   }
 
-  public ResponseEntity<ResponseMessage> updateRepresentTimetable(SessionUser sessionUser, Long no) {
+  public ResponseEntity<ResponseMessage> updateRepresentTimetable(Long no, String token) {
+    User user = sessionUser.getUserByToken(token);
     ResponseMessage result;
+
+    if (user == null) {
+      result = new ResponseMessage(false, INVALID_TOKEN);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+    }
+
     Timetable timetable = timetableRepository.findOne(no);
-    User user = sessionUser.getCurrentUser();
 
     if (timetable == null) {
       result = new ResponseMessage(false, NOT_FOUND_USER);

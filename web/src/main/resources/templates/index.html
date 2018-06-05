@@ -1,17 +1,19 @@
 <!DOCTYPE html>
-<html lang="kr">
+<html lang="kr" xmlns:th="http://www.w3.org/1999/xhtml">
 
-<head>
-    {{ > /include/header}}
-</head>
+<head th:include="/include/header :: headerfragment">
 
 <body>
-    {{ > /include/navigation}}
+    <div th:include="/include/navigation :: navigation"></div>
     <div class="jumbotron">
         <h1>TiCo</h1>
         <p>시간표를 비교하여 프로젝트 미팅이 가능한 시간을 추천해주는 서비스<br></p>
     </div>
-    {{ > /include/bottom}}
+    <div th:include="/include/footer :: footer"></div>
 </body>
+
+<script th:inline="javascript">
+    console.log(token);
+</script>
 
 </html>

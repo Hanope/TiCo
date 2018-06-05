@@ -8,6 +8,9 @@ $.ajax({
   url: '/api/team/' + no + '/schedule/all',
   method: 'get',
   dataType: 'json',
+  beforeSend: function(xhr) {
+    xhr.setRequestHeader('TiCo-Token', token);
+  },
   success: function(response) {
     var data = response['message'];
     var scheduledDate = [];

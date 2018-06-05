@@ -1,3 +1,4 @@
+<head th:fragment="headerfragment">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TiCo</title>
@@ -13,3 +14,8 @@
   <link rel="stylesheet" href="/assets/css/styles.css">
   <link rel="stylesheet" href="/assets/css/timetable.css">
   <link rel="stylesheet" href="/assets/css/user-list.css">
+  <link rel="stylesheet" type="text/css" href="/assets/css/jsCalendar.css">
+  <script th:inline="javascript">token = [[${user?.token}]];</script>
+  <script type="text/javascript" src="/assets/js/jsCalendar.js"></script>
+  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=wnavBrZRPufq2v2I_OdJ&submodules=geocoder"></script>
+</head>

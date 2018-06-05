@@ -31,9 +31,9 @@ public class ScheduleService {
   @Autowired
   private SessionUser sessionUser;
 
-  public ResponseEntity<ResponseMessage> addSchedule(Long no, ScheduleDTO scheduleDTO) {
+  public ResponseEntity<ResponseMessage> addSchedule(Long no, ScheduleDTO scheduleDTO, String token) {
     ResponseMessage result;
-    User user = sessionUser.getCurrentUser();
+    User user = sessionUser.getUserByToken(token);
     Timetable timetable = timetableRepository.findOne(no);
 
     if (timetable == null) {

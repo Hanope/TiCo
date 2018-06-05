@@ -1,16 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<head>
-  {{ > /include/header}}
-
-  <link rel="stylesheet" type="text/css" href="/assets/css/jsCalendar.css">
-  <script type="text/javascript" src="/assets/js/jsCalendar.js"></script>
-  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=wnavBrZRPufq2v2I_OdJ&submodules=geocoder"></script>
-</head>
+<head th:include="/include/header :: headerfragment"></head>
 
 <body>
-    {{ > /include/navigation}}
+<div th:include="/include/navigation :: navigation"></div>
     <div>
       <div class="container">
         <div class="row">
@@ -71,22 +65,21 @@
                       </tr>
                       </thead>
                       <tbody>
-                      {{#teamMember}}
-                      <tr>
+
+                      <tr th:each="member : ${teamMember}">
                         <td>
-                          <span>{{id}}</span>
+                          <span th:text="${member.id}"></span>
                         </td>
                         <td>
-                          <span>{{name}}</span>
+                          <span th:text="${member.name}"></span>
                         </td>
                         <td>
-                          <span>{{studentNo}}</span>
+                          <span th:text="${member.studentNo}"></span>
                         </td>
                         <td>
                           <span><button class="btn btn-danger btn-delete-user">-</button></span>
                         </td>
                       </tr>
-                      {{/teamMember}}
                       </tbody>
                     </table>
                   </div>
@@ -396,8 +389,7 @@
         </table>
       </div></div>
     </div>
-    {{ > /include/bottom}}
-
+    <div th:include="/include/footer :: footer"></div>
     <script src="/assets/js/timetable.js"></script>
     <script src="/assets/js/map.js"></script>
     <script src="/assets/js/calendar.js"></script>
@@ -413,6 +405,9 @@
           url: '/api/user/' + userName,
           type: 'GET',
           dataType: 'json',
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader('TiCo-Token', token);
+          },
           success: function(response) {
               addSearchedMember(response['message']);
           },
@@ -430,6 +425,9 @@
           url: '/api/team/' + projectNo + '/members/' + userId,
           type: 'POST',
           dataType: 'json',
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader('TiCo-Token', token);
+          },
           success: function(response) {
             alert(response['message']);
             location.reload();
@@ -449,6 +447,9 @@
           url: '/api/team/' + projectNo + '/members/' + userId,
           type: 'delete',
           dataType: 'json',
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader('TiCo-Token', token);
+          },
           success: function(response) {
             alert(response['message']);
             location.reload();

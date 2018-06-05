@@ -1,5 +1,7 @@
 package com.tico.web.service;
 
+import static com.tico.web.model.ResponseStatus.INVALID_TOKEN;
+
 import com.tico.web.model.ResponseMessage;
 import com.tico.web.model.Hour;
 import com.tico.web.model.ResponseStatus;
@@ -91,8 +93,15 @@ public class TimetableService {
     return timetables;
   }
 
-  public ResponseEntity<ResponseMessage> findOne(Long no) {
+  public ResponseEntity<ResponseMessage> findOne(Long no, String token) {
+    User user = sessionUser.getUserByToken(token);
     ResponseMessage result;
+
+    if (user == null) {
+      result = new ResponseMessage(false, INVALID_TOKEN);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+    }
+
     Timetable timetable = timetableRepository.findOne(no);
 
     if (timetable == null) {

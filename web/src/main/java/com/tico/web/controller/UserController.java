@@ -27,7 +27,7 @@ public class UserController {
     if (userService.join(userDTO)) {
       return "redirect:/user/login";
     }
-    return "redirect:/error/500";
+    return "redirect:/user/join?error";
   }
 
   @GetMapping("/login")

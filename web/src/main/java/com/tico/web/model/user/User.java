@@ -13,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,15 +28,19 @@ public class User {
   private Long no;
 
   @Column(length = 20, nullable = false)
+  @NotNull
   private String id;
 
   @Column(nullable = false)
+  @NotNull
   private String password;
 
   @Column(length = 20, nullable = false)
+  @NotNull
   private String name;
 
   @Column(length = 10, nullable = false)
+  @NotNull
   private String studentNo;
 
   @OneToMany(fetch = FetchType.LAZY)
@@ -59,12 +64,20 @@ public class User {
   @OneToOne
   private Timetable timetable;
 
+  @NotNull
+  private String role;
+
+  @NotNull
+  private String token;
+
   @Builder
-  public User(String id, String password, String name, String studentNo) {
+  public User(String id, String password, String name, String studentNo, String role, String token) {
     this.id = id;
     this.password = password;
     this.name = name;
     this.studentNo = studentNo;
+    this.role = role;
+    this.token = token;
   }
 
   public void addTimetable(Timetable timetable) {

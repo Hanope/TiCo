@@ -49,8 +49,33 @@ public class TeamProjectService {
     return teamProjectRepository.save(teamProject);
   }
 
-  public ResponseEntity<ResponseMessage> getTeamMembers(Long projectNo) {
+  public ResponseEntity<ResponseMessage> createNewProject(String projectName, String token) {
+    User user = sessionUser.getUserByToken(token);
     ResponseMessage result;
+
+    if (user == null) {
+      result = new ResponseMessage(false, INVALID_TOKEN);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+    }
+
+    TeamProject teamProject = TeamProjectDTO.builder()
+        .name(projectName)
+        .owner(user)
+        .build()
+        .toEntity();
+    result = new ResponseMessage(true, teamProject);
+    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
+  }
+
+  public ResponseEntity<ResponseMessage> getTeamMembers(Long projectNo, String token) {
+    User user = sessionUser.getUserByToken(token);
+    ResponseMessage result;
+
+    if (user == null) {
+      result = new ResponseMessage(false, INVALID_TOKEN);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+    }
+
     TeamProject teamProject = teamProjectRepository.findOne(projectNo);
 
     if (teamProject == null) {
@@ -73,8 +98,15 @@ public class TeamProjectService {
     return userList;
   }
 
-  public ResponseEntity<ResponseMessage> getTeamTimetableList(Long projectNo) {
+  public ResponseEntity<ResponseMessage> getTeamTimetableList(Long projectNo, String token) {
+    User user = sessionUser.getUserByToken(token);
     ResponseMessage result;
+
+    if (user == null) {
+      result = new ResponseMessage(false, INVALID_TOKEN);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+    }
+
     TeamProject teamProject = teamProjectRepository.findOne(projectNo);
 
     if (teamProject == null) {
@@ -88,11 +120,18 @@ public class TeamProjectService {
     return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
   }
 
-  public ResponseEntity<ResponseMessage> addMember(Long projectNo, String userId) {
+  public ResponseEntity<ResponseMessage> addMember(Long projectNo, String userId, String token) {
+    User user = sessionUser.getUserByToken(token);
     ResponseMessage result;
+
+    if (user == null) {
+      result = new ResponseMessage(false, INVALID_TOKEN);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+    }
+
     TeamProject teamProject = teamProjectRepository.findOne(projectNo);
-    User owner = sessionUser.getCurrentUser();
-    User user = userRepository.findOneById(userId);
+    User owner = sessionUser.getUserByToken(token);
+    User newUser = userRepository.findOneById(userId);
 
     if (teamProject == null) {
       result = new ResponseMessage(false, NOT_FOUND_PROJECT);
@@ -104,19 +143,19 @@ public class TeamProjectService {
       return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
     }
 
-    if (user == null) {
+    if (newUser == null) {
       result = new ResponseMessage(false, NOT_FOUND_USER);
       return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
     }
 
-    if (isExistsMember(teamProject, user)) {
+    if (isExistsMember(teamProject, newUser)) {
       result = new ResponseMessage(false, EXISTS_MEMBER);
       return new ResponseEntity<ResponseMessage>(result, HttpStatus.FORBIDDEN);
     }
 
-    teamProject.addMember(user);
+    teamProject.addMember(newUser);
     teamProjectRepository.save(teamProject);
-    result = new ResponseMessage(true, user.getName() + "님이 추가되었습니다.");
+    result = new ResponseMessage(true, newUser.getName() + "님이 추가되었습니다.");
     return new ResponseEntity<ResponseMessage>(result, HttpStatus.CREATED);
   }
 
@@ -125,35 +164,42 @@ public class TeamProjectService {
     return users.contains(user);
   }
 
-  public ResponseEntity<ResponseMessage> deleteMember(Long projectNo, String userId) {
+  public ResponseEntity<ResponseMessage> deleteMember(Long projectNo, String userId, String token) {
+    User user = sessionUser.getUserByToken(token);
     ResponseMessage result;
+
+    if (user == null) {
+      result = new ResponseMessage(false, INVALID_TOKEN);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+    }
+
     TeamProject teamProject = teamProjectRepository.findOne(projectNo);
-    User owner = sessionUser.getCurrentUser();
-    User user = userRepository.findOneById(userId);
 
     if (teamProject == null) {
       result = new ResponseMessage(false, NOT_FOUND_PROJECT);
       return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
     }
 
-    if (user == null || !isExistsMember(teamProject, user)) {
-      result = new ResponseMessage(false, NOT_FOUND_USER);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
-    }
+    User deleteUser = userRepository.findOneById(userId);
 
-    if (isOwner(teamProject.getOwner(), user)) {
-      result = new ResponseMessage(false, CAN_NOT_DELETE_PROJECT_OWNER);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.FORBIDDEN);
-    }
-
-    if (!isOwner(teamProject.getOwner(), owner)) {
+    if (!isOwner(teamProject.getOwner(), user)) {
       result = new ResponseMessage(false, CAN_NOT_UPDATE_PROJECT_MEMBER);
       return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
     }
 
-    teamProject.deleteMember(user);
+    if (deleteUser == null || !isExistsMember(teamProject, deleteUser)) {
+      result = new ResponseMessage(false, NOT_FOUND_USER);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+    }
+
+    if (isOwner(teamProject.getOwner(), deleteUser)) {
+      result = new ResponseMessage(false, CAN_NOT_DELETE_PROJECT_OWNER);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.FORBIDDEN);
+    }
+
+    teamProject.deleteMember(deleteUser);
     teamProjectRepository.save(teamProject);
-    result = new ResponseMessage(true, user.getName() + "님이 삭제되었습니다.");
+    result = new ResponseMessage(true, deleteUser.getName() + "님이 삭제되었습니다.");
     return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
   }
 
@@ -193,8 +239,15 @@ public class TeamProjectService {
     return dto;
   }
 
-  public ResponseEntity<ResponseMessage> getTeamSchedules(Long teamNo) {
+  public ResponseEntity<ResponseMessage> getTeamSchedules(Long teamNo, String token) {
+    User user = sessionUser.getUserByToken(token);
     ResponseMessage result;
+
+    if (user == null) {
+      result = new ResponseMessage(false, INVALID_TOKEN);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+    }
+
     TeamProject teamProject = teamProjectRepository.findOne(teamNo);
     List<TeamSchedule> teamSchedules = getSchedulesAfterToday(teamProject.getTeamSchedule());
 
@@ -224,8 +277,15 @@ public class TeamProjectService {
     return teamSchedules;
   }
 
-  public ResponseEntity<ResponseMessage> getTeamScheduleByDate(Long teamNo, String date) {
+  public ResponseEntity<ResponseMessage> getTeamScheduleByDate(Long teamNo, String date, String token) {
+    User user = sessionUser.getUserByToken(token);
     ResponseMessage result;
+
+    if (user == null) {
+      result = new ResponseMessage(false, INVALID_TOKEN);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+    }
+
     TeamProject teamProject = teamProjectRepository.findOne(teamNo);
     List<TeamSchedule> teamSchedules = teamProject.getTeamSchedule();
     List<TeamSchedule> schedules = getTeamScheduleByDate(teamSchedules, date);
@@ -255,8 +315,15 @@ public class TeamProjectService {
     return teamScheduleList;
   }
 
-  public ResponseEntity<ResponseMessage> getAllTeamSchedules(Long teamNo) {
+  public ResponseEntity<ResponseMessage> getAllTeamSchedules(Long teamNo, String token) {
+    User user = sessionUser.getUserByToken(token);
     ResponseMessage result;
+
+    if (user == null) {
+      result = new ResponseMessage(false, INVALID_TOKEN);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+    }
+
     TeamProject teamProject = teamProjectRepository.findOne(teamNo);
     List<TeamSchedule> teamSchedules = teamProject.getTeamSchedule();
 
@@ -276,8 +343,15 @@ public class TeamProjectService {
 
   // TODO 프로젝트 시간표를 가져와야하는 동시에 개인 시간표도 모두 가져와야 함, 그다음 시간이 겹치는지 확인하고 겹치면 추가 X 날짜는 어떻게,,?
   @Transactional
-  public ResponseEntity<ResponseMessage> addTeamSchedule(Long teamNo, TeamScheduleDTO teamScheduleDTO) {
+  public ResponseEntity<ResponseMessage> addTeamSchedule(Long teamNo, TeamScheduleDTO teamScheduleDTO, String token) {
+    User user = sessionUser.getUserByToken(token);
     ResponseMessage result;
+
+    if (user == null) {
+      result = new ResponseMessage(false, INVALID_TOKEN);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+    }
+
     TeamProject teamProject = teamProjectRepository.findOne(teamNo);
     TeamSchedule teamSchedule = teamScheduleDTO.toEntity();
 

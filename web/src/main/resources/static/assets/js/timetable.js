@@ -27,6 +27,9 @@ function loadTimetableByUser() {
     url: '/api/timetable/' + no,
     type: 'GET',
     dataType: 'json',
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader('TiCo-Token', token);
+    },
     success: function(response) {
       createTable(response['message'], 'purple');
     },
@@ -43,6 +46,9 @@ function loadTimetableByTeam() {
     url: '/api/team/' + no + '/timetable',
     type: 'GET',
     dataType: 'json',
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader('TiCo-Token', token);
+    },
     success: function(response) {
       console.log(response);
 
@@ -107,6 +113,9 @@ function scheduleWrite() {
     type: 'POST',
     dataType: 'json',
     contentType: 'application/json; charset=UTF-8',
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader('TiCo-Token', token);
+    },
     data: JSON.stringify({
       "name": name,
       "day": day,
@@ -137,6 +146,9 @@ $('#search_btn').click(function(event) {
     data: {
       "user_id": user_id,
       "user_password": user_password
+    },
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader('TiCo-Token', token);
     },
     success: function(response) {
       // debug

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 
 @ApiIgnore
@@ -25,8 +26,9 @@ public class TimetableController {
   private SessionUser sessionUser;
 
   @GetMapping("/create")
-  public String createTimetableView() {
-    return "/timetable/timetable_create";
+  public ModelAndView createTimetableView() {
+    User user = sessionUser.getCurrentUser();
+    return new ModelAndView("/timetable/timetable_create", "user", user);
   }
 
   @PostMapping("/create")
@@ -38,12 +40,14 @@ public class TimetableController {
   }
 
   @GetMapping("/{no}")
-  public String show(@PathVariable Long no) {
-    return "/timetable/timetable";
+  public ModelAndView show(@PathVariable Long no) {
+    User user = sessionUser.getCurrentUser();
+    return new ModelAndView("/timetable/timetable", "user", user);
   }
 
   @GetMapping("/sync")
-  public String syncView() {
-    return "/timetable/sync";
+  public ModelAndView syncView() {
+    User user = sessionUser.getCurrentUser();
+    return new ModelAndView("/timetable/sync", "user", user);
   }
 }

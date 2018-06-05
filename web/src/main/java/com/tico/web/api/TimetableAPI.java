@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,8 +27,8 @@ public class TimetableAPI {
 //  }
 
   @GetMapping("/{no}")
-  public ResponseEntity<ResponseMessage> show(@PathVariable Long no) {
-    return timetableService.findOne(no);
+  public ResponseEntity<ResponseMessage> show(@PathVariable Long no, @RequestHeader(value="TiCo-Token") String token) {
+    return timetableService.findOne(no, token);
   }
 
   @PostMapping("/sync")

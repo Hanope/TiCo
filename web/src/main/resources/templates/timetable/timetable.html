@@ -1,21 +1,10 @@
 <!DOCTYPE html>
-<html lang="kr">
+<html lang="kr" xmlns:th="http://www.w3.org/1999/xhtml">
 
-<head>
-  {{ > /include/header}}
-</head>
+<head th:include="/include/header :: headerfragment">
 
 <body>
-{{ > /include/navigation}}
-  <!--<div class="main-container">-->
-    <!--<div class="container">-->
-      <!--<form class="form-inline" method="post">-->
-        <!--<div class="form-group"><input class="form-control" id="user_id" type="text" name="user_id" placeholder="ID"></div>-->
-        <!--<div class="form-group"><input class="form-control" id="user_password" type="password" name="user_password" placeholder="Password"></div>-->
-        <!--<div class="form-group"><button class="btn btn-primary" id="search_btn" type="submit">시간표 조회</button></div>-->
-      <!--</form>-->
-    <!--</div>-->
-  <!--</div>-->
+<div th:include="/include/navigation :: navigation"></div>
   <div class="container text-right" style="margin: 30px 0">
     <button class="btn btn-success btn-represent-timetable">대표 시간표 등록</button>
   </div>
@@ -331,9 +320,8 @@
 
   </div>
 
-  <script src="/assets/js/jquery.min.js"></script>
-  <script src="/assets/js/timetable.js"></script>
-  <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<div th:include="/include/footer :: footer"></div>
+
   <script>
     $(document).ready(function() {
       var clicks = 0;
@@ -383,6 +371,9 @@
           url: '/api/user/timetable/' + no,
           method: 'put',
           dataType: 'json',
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader('TiCo-Token', token);
+          },
           success: function(response) {
             console.log(response);
           }

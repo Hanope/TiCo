@@ -1,4 +1,5 @@
-<div>
+<div th:fragment="navigation" xmlns:sec="http://www.w3.org/1999/xhtml"
+     xmlns:th="http://www.w3.org/1999/xhtml">
   <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
     <div class="container"><a class="navbar-brand" href="/">TiCo</a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
       <div class="collapse navbar-collapse" id="navcol-1">
@@ -6,9 +7,7 @@
           <li class="dropdown">
             <a class="dropdown-toggle nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">주간일정 관리</a>
             <div class="dropdown-menu" role="menu">
-              {{#timetables}}
-                <a class="dropdown-item" role="presentation" href="/timetable/{{no}}">{{name}}</a>
-              {{/timetables}}
+              <a class="dropdown-item" role="presentation" th:each="timetable : ${user?.timetables}" th:text="${timetable.name}" th:href="@{/timetable/{no}(no=${timetable.no})}"></a>
               <div class="dropdown-divider" role="presentation"></div>
               <a class="dropdown-item" role="presentation" href="/timetable/create">+시간표 생성</a>
               <a class="dropdown-item" role="presentation" href="/timetable/sync">시간표 동기화</a>
@@ -17,16 +16,21 @@
           <li class="dropdown">
             <a class="dropdown-toggle nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">프로젝트 관리</a>
             <div class="dropdown-menu" role="menu">
-              {{#projects}}
-              <a class="dropdown-item" role="presentation" href="/team/{{no}}">{{name}}</a>
-              {{/projects}}
+              <a class="dropdown-item" role="presentation" th:each="project : ${user?.teamProjects}" th:text="${project.name}" th:href="@{/team/{no}(no=${project.no})}"></a>
               <div class="dropdown-divider" role="presentation"></div>
               <a class="dropdown-item" role="presentation" href="/team">+프로젝트 생성</a>
             </div>
           </li>
         </ul>
-        <span class="navbar-text actions">
-          <a href="/user/login" class="login">Log In</a>
+
+        <span class="navbar-text actions" sec:authorize="isAuthenticated()">
+          <a class="btn btn-primary action-button" sec:authentication="name"></a>
+          <span sec:authentication="principal.password"></span>
+          <a class="btn btn-light action-button" role="button" href="/user/logout">Logout</a>
+        </span>
+
+        <span class="navbar-text actions" sec:authorize="!isAuthenticated()">
+          <a href="/user/login" class="login btn btn-primary action-button">Log In</a>
           <a class="btn btn-light action-button" role="button" href="/user/join">Sign Up</a>
         </span>
       </div>

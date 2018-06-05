@@ -28,4 +28,6 @@ public interface ResponseStatus {
 
   String SERVER_ERROR = "Server Error";
 
+  String INVALID_TOKEN = "토큰이 유효하지 않습니다.";
+
 }
