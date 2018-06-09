@@ -60,11 +60,6 @@ public class UserService {
     return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
   }
 
-  public User addNewTimetable(User user, Timetable timetable) {
-    user.addTimetable(timetable);
-    return userRepository.save(user);
-  }
-
   public boolean join(UserJoinDTO userJoinDTO) {
     User user = userJoinDTO.toEntity();
 
@@ -91,7 +86,7 @@ public class UserService {
       return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
     }
 
-    if (user.getTimetable().getUser().getId() != timetable.getUser().getId()) {
+    if (user.getId() != timetable.getUser().getId()) {
       result = new ResponseMessage(false, CAN_NOT_UPDATE_OTHER_TIMETABLE);
       return new ResponseEntity<ResponseMessage>(result, HttpStatus.FORBIDDEN);
     }

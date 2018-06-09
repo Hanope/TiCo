@@ -30,6 +30,9 @@ public class TimetableService {
   private ScheduleRepository scheduleRepository;
 
   @Autowired
+  private UserRepository userRepository;
+
+  @Autowired
   private UserService userService;
 
   @Autowired
@@ -43,7 +46,8 @@ public class TimetableService {
         .build();
 
     timetable = timetableRepository.save(timetable);
-    userService.addNewTimetable(user, timetable);
+    user.addTimetable(timetable);
+    userRepository.save(user);
 
     return timetable;
   }

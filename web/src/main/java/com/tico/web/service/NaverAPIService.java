@@ -25,7 +25,7 @@ public class NaverAPIService {
       return new ResponseEntity<ResponseMessage>(result, HttpStatus.FORBIDDEN);
     }
 
-    result = new ResponseMessage(false, apiResult);
+    result = new ResponseMessage(true, apiResult);
     return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
   }
 

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="kr" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head th:include="/include/header :: headerfragment">
 
 <body>
-<head th:include="/include/navigation :: navigation">
+<div th:include="/include/navigation :: navigation"></div>
 <div class="container" style="margin-top: 20px">
   <div class="row">
     <div class="col-6">
@@ -30,10 +30,7 @@
   });
 
   myCalendar.onDateClick(function(event, date) {
-    var gYear = date.getFullYear();
-    var gMonth = date.getMonth() + 1;
-    var gDate = date.getDate();
-    var clickedDate = gYear + pad(gMonth, 2) + pad(gDate, 2);
+    var clickedDate = changeDateToString(date);
 
     clickDay = date.toString();
     console.log(clickedDate);
@@ -80,21 +77,27 @@
   }
 
   function drawScheduleTable(data) {
-    var date = new Date(data['date']);
-    var hourSize = data['schedules'][0]['hours'].length;
-    var startHour = data['schedules'][0]['hours'][0]['startHour'];
-    var endHour = data['schedules'][0]['hours'][hourSize - 1]['endHour'];
+    var _string_date = data['date'];
+    var hourSize = data['schedule']['hours'].length;
+    var startHour = data['schedule']['hours'][0]['startHour'];
+    var endHour = data['schedule']['hours'][hourSize - 1]['endHour'];
     var locationName = data['location']['name'];
     var locationAddress = data['location']['address'];
-    var day = data['schedules'][0]['day'];
+    var day = data['schedule']['day'];
     var title = data['title'];
     var content = data['content'];
 
+    var split_date = _string_date.split("/");
+    var _year = split_date[2];
+    var _month = split_date[1];
+    var _day = split_date[0];
+    var stringDate = _month + "/" + _day + "/" + _year;
+    var date = new Date(stringDate);
 
     var template = '<div class="calendar-container" style="margin:46px;"><div class="row row-striped">\n'
         + '      <div class="col-2 text-center ">\n'
-        + '        <h1 class="display-4 "><span class="badge date-green">' + date.getDate() + '월</span></h1>\n'
-        + '        <h2>' + (date.getMonth() + 1) + '일</h2>\n'
+        + '        <h1 class="display-4 "><span class="badge date-green">' + (date.getMonth() + 1) + '월</span></h1>\n'
+        + '        <h2>' + date.getDate() + '일</h2>\n'
         + '      </div>\n'
         + '      <div class="col-10">\n'
         + '        <h3 class="text-uppercase"><strong>' + title + '</strong></h3>\n'

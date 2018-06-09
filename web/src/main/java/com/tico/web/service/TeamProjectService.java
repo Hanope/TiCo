@@ -6,6 +6,7 @@ import com.tico.web.model.Hour;
 import com.tico.web.model.ResponseMessage;
 import com.tico.web.model.project.TeamProject;
 import com.tico.web.model.project.TeamProjectDTO;
+import com.tico.web.model.project.TeamProjectVO;
 import com.tico.web.model.project.TeamSchedule;
 import com.tico.web.model.project.TeamScheduleDTO;
 import com.tico.web.model.timetable.Timetable;
@@ -13,9 +14,14 @@ import com.tico.web.model.timetable.TimetableDTO;
 import com.tico.web.model.timetable.schedule.Schedule;
 import com.tico.web.model.user.User;
 import com.tico.web.model.user.UserDTO;
+import com.tico.web.repository.LocationRepository;
+import com.tico.web.repository.ScheduleRepository;
 import com.tico.web.repository.TeamProjectRepository;
+import com.tico.web.repository.TeamScheduleRepository;
 import com.tico.web.repository.UserRepository;
 import com.tico.web.util.SessionUser;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -37,6 +43,15 @@ public class TeamProjectService {
   private TeamProjectRepository teamProjectRepository;
 
   @Autowired
+  private LocationRepository locationRepository;
+
+  @Autowired
+  private ScheduleRepository scheduleRepository;
+
+  @Autowired
+  private TeamScheduleRepository teamScheduleRepository;
+
+  @Autowired
   private UserRepository userRepository;
 
   public TeamProject createNewProject(String projectName) {
@@ -47,6 +62,24 @@ public class TeamProjectService {
         .build()
         .toEntity();
     return teamProjectRepository.save(teamProject);
+  }
+
+  public ResponseEntity<ResponseMessage> getAllTeamProject(String token) {
+    User user = sessionUser.getUserByToken(token);
+    ResponseMessage result;
+    List<TeamProjectVO> teamProjects = new ArrayList<>();
+
+    if (user == null) {
+      result = new ResponseMessage(false, INVALID_TOKEN);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+    }
+
+    for (TeamProject teamProject : user.getTeamProjects()) {
+      teamProjects.add(new TeamProjectVO(teamProject));
+    }
+
+    result = new ResponseMessage(true, teamProjects);
+    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
   }
 
   public ResponseEntity<ResponseMessage> createNewProject(String projectName, String token) {
@@ -287,13 +320,42 @@ public class TeamProjectService {
     }
 
     TeamProject teamProject = teamProjectRepository.findOne(teamNo);
-    List<TeamSchedule> teamSchedules = teamProject.getTeamSchedule();
-    List<TeamSchedule> schedules = getTeamScheduleByDate(teamSchedules, date);
 
     if (teamProject == null) {
       result = new ResponseMessage(false, NOT_FOUND_PROJECT);
       return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
     }
+
+    List<TeamSchedule> teamSchedules = teamProject.getTeamSchedule();
+    List<TeamSchedule> schedules = getTeamScheduleByDate(teamSchedules, date);
+
+    if (schedules.size() == 0) {
+      result = new ResponseMessage(false, NOT_FOUND_SCHEDULE);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+    }
+
+    result = new ResponseMessage(true, schedules);
+    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
+  }
+
+  public ResponseEntity<ResponseMessage> getTeamScheduleByStartAndEndDate(Long teamNo, String startDate, String endDate, String token) {
+    User user = sessionUser.getUserByToken(token);
+    ResponseMessage result;
+
+    if (user == null) {
+      result = new ResponseMessage(false, INVALID_TOKEN);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+    }
+
+    TeamProject teamProject = teamProjectRepository.findOne(teamNo);
+
+    if (teamProject == null) {
+      result = new ResponseMessage(false, NOT_FOUND_PROJECT);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+    }
+
+    List<TeamSchedule> teamSchedules = teamProject.getTeamSchedule();
+    List<TeamSchedule> schedules = getTeamScheduleByStartAndEndDate(teamSchedules, startDate, endDate);
 
     if (schedules.size() == 0) {
       result = new ResponseMessage(false, NOT_FOUND_SCHEDULE);
@@ -307,10 +369,34 @@ public class TeamProjectService {
   private List<TeamSchedule> getTeamScheduleByDate(List<TeamSchedule> teamSchedules, String date) {
     List<TeamSchedule> teamScheduleList = new ArrayList<>();
 
-    for (TeamSchedule teamSchedule : teamSchedules) {
-      if (teamSchedule.getCompareDate().equals(date))
-        teamScheduleList.add(teamSchedule);
-    }
+//    for (TeamSchedule teamSchedule : teamSchedules) {
+//      if (teamSchedule.getCompareDate().equals(date))
+//        teamScheduleList.add(teamSchedule);
+//    }
+
+    try {
+      Date cDate = new SimpleDateFormat("yyyyMMdd").parse(date);
+      for (TeamSchedule teamSchedule : teamSchedules) {
+        Date d = teamSchedule.getRealDate();
+        if (cDate.compareTo(d) == 0)
+          teamScheduleList.add(teamSchedule);
+      }
+    } catch (ParseException e) { }
+    return teamScheduleList;
+  }
+
+  private List<TeamSchedule> getTeamScheduleByStartAndEndDate(List<TeamSchedule> teamSchedules, String startDate, String endDate) {
+    List<TeamSchedule> teamScheduleList = new ArrayList<>();
+
+    try {
+      Date startD = new SimpleDateFormat("yyyyMMdd").parse(startDate);
+      Date endD = new SimpleDateFormat("yyyyMMdd").parse(endDate);
+      for (TeamSchedule teamSchedule : teamSchedules) {
+        Date date = teamSchedule.getRealDate();
+        if (date.compareTo(startD) == 0 || date.compareTo(endD) == 0 || startD.compareTo(date) * date.compareTo(endD) > 0)
+          teamScheduleList.add(teamSchedule);
+      }
+    } catch (ParseException e) { }
 
     return teamScheduleList;
   }
@@ -346,6 +432,9 @@ public class TeamProjectService {
   public ResponseEntity<ResponseMessage> addTeamSchedule(Long teamNo, TeamScheduleDTO teamScheduleDTO, String token) {
     User user = sessionUser.getUserByToken(token);
     ResponseMessage result;
+    List<TeamSchedule> teamSchedules;
+    String date = teamScheduleDTO.getDate();
+    boolean isScheduled = true;
 
     if (user == null) {
       result = new ResponseMessage(false, INVALID_TOKEN);
@@ -353,32 +442,54 @@ public class TeamProjectService {
     }
 
     TeamProject teamProject = teamProjectRepository.findOne(teamNo);
-    TeamSchedule teamSchedule = teamScheduleDTO.toEntity();
+    teamSchedules = teamProject.getTeamSchedule();
+    TeamSchedule newTeamSchedule = teamScheduleDTO.toEntity();
 
     if (teamProject == null) {
       result = new ResponseMessage(false, NOT_FOUND_PROJECT);
       return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
     }
 
-    if (isExistSchedule(teamProject.getTeamSchedule(), teamSchedule.getSchedules().get(0))) {
-      result = new ResponseMessage(false, EXISTS_SCHEDULE);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.FORBIDDEN);
+    List<Schedule> scheduleList = new ArrayList<>();
+
+    // 해당 요일에 시간표 비교 하는거
+
+    for (TeamSchedule teamSchedule : getTeamScheduleByDate(teamSchedules, date)) {
+      scheduleList.add(teamSchedule.getSchedule());
     }
 
-    teamProject.addSchedule(teamSchedule);
+    for (TimetableDTO timetableDTO : getTimetableList(teamProject)) {
+      for (Schedule schedule : timetableDTO.getSchedules()) {
+        scheduleList.add(schedule);
+      }
+    }
+    isScheduled = isExistSchedule(scheduleList, newTeamSchedule.getSchedule());
+
+
+    if (isScheduled) {
+      result = new ResponseMessage(false, EXISTS_SCHEDULE);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.CREATED);
+    }
+
+
+    locationRepository.save(newTeamSchedule.getLocation());
+    scheduleRepository.save(newTeamSchedule.getSchedule());
+    teamScheduleRepository.save(newTeamSchedule);
+
+    teamProject.addSchedule(newTeamSchedule);
+
+
     teamProjectRepository.save(teamProject);
 
-    result = new ResponseMessage(false, SUCCESS_ADD_SCHEDULE);
+    result = new ResponseMessage(true, SUCCESS_ADD_SCHEDULE);
     return new ResponseEntity<ResponseMessage>(result, HttpStatus.CREATED);
   }
 
-  private boolean isExistSchedule(List<TeamSchedule> teamSchedules, Schedule newSchedule) {
-    for (TeamSchedule teamSchedule : teamSchedules) {
-      for (Schedule schedule : teamSchedule.getSchedules()) {
-        if (isDuplicateDay(schedule.getDay(), newSchedule.getDay())) {
-          if (isDuplicateHour(schedule.getHours(), newSchedule.getHours())) {
-            return true;
-          }
+  private boolean isExistSchedule(List<Schedule> timetableSchedules, Schedule newSchedule) {
+    for (Schedule schedule : timetableSchedules) {
+      if (isDuplicateDay(schedule.getDay(), newSchedule.getDay())) {
+        if (isDuplicateHour(schedule.getHours(), newSchedule.getHours())) {
+          return true;
         }
       }
     }

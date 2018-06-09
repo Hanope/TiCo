@@ -5,6 +5,7 @@ import com.tico.web.model.Location;
 import com.tico.web.model.LocationDTO;
 import com.tico.web.model.timetable.schedule.Schedule;
 import com.tico.web.model.timetable.schedule.ScheduleDTO;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,7 +22,9 @@ public class TeamScheduleDTO {
 
   private LocationDTO location;
 
-  private List<ScheduleDTO> schedules;
+//  private List<ScheduleDTO> schedules;
+
+  private ScheduleDTO schedule;
 
   private String title;
 
@@ -29,17 +32,25 @@ public class TeamScheduleDTO {
 
   public TeamSchedule toEntity() {
     TeamSchedule teamSchedule = new TeamSchedule();
-    List<Schedule> scheduleList = new ArrayList<>();
+//    List<Schedule> scheduleList = new ArrayList<>();
 
-    for (ScheduleDTO scheduleDTO : schedules) {
-      Schedule schedule = Schedule.builder()
-          .name(scheduleDTO.getName())
-          .day(scheduleDTO.getDay())
-          .hours(Hour.stringHoursToListHour(scheduleDTO.getHours()))
-          .build();
+//    for (ScheduleDTO scheduleDTO : schedules) {
+//      Schedule schedule = Schedule.builder()
+//          .name(scheduleDTO.getName())
+//          .day(scheduleDTO.getDay())
+//          .hours(Hour.stringHoursToListHour(scheduleDTO.getHours()))
+//          .build();
+//
+//      scheduleList.add(schedule);
+//    }
 
-      scheduleList.add(schedule);
-    }
+    Schedule newSchedule = Schedule.builder()
+        .name(schedule.getName())
+        .day(schedule.getDay())
+        .hours(Hour.stringHoursToListHour(schedule.getHours()))
+        .build();
+
+//    scheduleList.add(schedule);
 
     Location location = new Location();
     location.setName(this.location.getName());
@@ -48,10 +59,16 @@ public class TeamScheduleDTO {
     teamSchedule.setTitle(title);
     teamSchedule.setContent(content);
     teamSchedule.setLocation(location);
-    teamSchedule.setSchedules(scheduleList);
+//    teamSchedule.setSchedules(scheduleList);
+    teamSchedule.setSchedule(newSchedule);
     teamSchedule.setDate(date);
 
     return teamSchedule;
+  }
+
+  public String getDate() {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+    return sdf.format(this.date);
   }
 
 }

@@ -21,11 +21,6 @@ public class TimetableAPI {
   @Autowired
   private TimetableService timetableService;
 
-//  @GetMapping("/{no}")
-//  public Timetable show(@PathVariable Long no) {
-//    return timetableService.findOne(no);
-//  }
-
   @GetMapping("/{no}")
   public ResponseEntity<ResponseMessage> show(@PathVariable Long no, @RequestHeader(value="TiCo-Token") String token) {
     return timetableService.findOne(no, token);

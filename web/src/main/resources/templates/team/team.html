@@ -5,6 +5,11 @@
 
 <body>
 <div th:include="/include/navigation :: navigation"></div>
+    
+    <div class="container">
+      <button class="btn btn-success" id="btn-check-meeting">일정 확인</button>
+    </div>
+
     <div>
       <div class="container">
         <div class="row">
@@ -103,10 +108,18 @@
       </div>
     </div>
 
-    <div class="container schedule-card"></div>
+    <div class="container">
+      <div class="row">
+        <input type="text" id="text-place" placeholder="장소입력">
+        <button class="btn btn-success" id="btn-place-search">검색</button>
+        <select name="select-location" id="select-location"></select>
+      </div>
+      </div>
+    </div>
 
     <div class="container-fluid" style="margin:20px 0;">
-      <div class="container"><div class='tab'>
+      <div class="container">
+        <div class='tab'>
         <table border='0' cellpadding='0' cellspacing='0' id="timetable">
           <tr class='days'>
             <th></th>
@@ -389,13 +402,84 @@
         </table>
       </div></div>
     </div>
+
+<!-- 스케쥴 입력창 모달 -->
+<div class="modal fade" id="modal-schedule" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">일정 추가</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>날짜: <span id="modal-schedule-day">요일</span> <span id="modal-schedule-date">날짜</span></p>
+        <p>시작 시간: <span id="modal-schedule-start-time">시작시간</span><span id="modal-schedule-start-hourCode">1A</span></p>
+        <p>끝나는 시간: <span id="modal-schedule-end-time">끝시간</span><span id="modal-schedule-end-hourCode">1A</span></p>
+        <p>장소: <span id="modal-schedule-location">끝시간</span>
+        <input type="text" class="form-text" id="modal-schedule-title" size="15" placeholder="일정제목 입력">
+        <input type="text" class="form-text" id="modal-schedule-content" size="15" placeholder="일정내용 입력">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="modal-schedule-write" data-dismiss="modal">작성</button>
+      </div>
+    </div>
+  </div>
+</div>
+
     <div th:include="/include/footer :: footer"></div>
     <script src="/assets/js/timetable.js"></script>
     <script src="/assets/js/map.js"></script>
     <script src="/assets/js/calendar.js"></script>
     <script>
+      var priorDate = '';
+      var startDate, endDate;
+      var _date;
+
       $(document).ready(function() {
         loadTimetableByTeam();
+      });
+
+      myCalendar.onDateClick(function(event, date) {
+        var tempDate = date;
+
+        if (priorDate != '') {
+          console.log('clear: ' + priorDate);
+          myCalendar.unselect([priorDate]);
+        }
+
+        myCalendar.select([date]);
+        priorDate = new Date(date);
+
+        if (date.getDay() == 0) {
+          startDate = new Date(tempDate.setDate(date.getDate() - date.getDay() + 1 - 7));
+          endDate = new Date(tempDate.setDate(date.getDate() + (7 - date.getDay())));
+        } else {
+          startDate = new Date(tempDate.setDate(date.getDate() - date.getDay() + 1));
+          endDate = new Date(tempDate.setDate(date.getDate() + (7 - date.getDay())));
+        }
+
+        var _startDate = changeDateToString(startDate);
+        var _endDate = changeDateToString(endDate);
+
+        $.ajax({
+          url: '/api/team/' + no + '/schedule/' + _startDate + '/' + _endDate,
+          method: 'get',
+          dataType: 'json',
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader('TiCo-Token', token);
+          },
+          success: function(response) {
+            var data = response['message'];
+
+            $('td').removeClass('blue');
+            for (var i = 0; i < data.length; i++) {
+              createTableOneSchedule(data[i], 'blue');
+            }
+          },
+          error: function(response) {
+            $('td').removeClass('blue');
+          }
+        })
       });
 
       $('#btn-search').click(function() {
@@ -476,6 +560,134 @@
           searchedMemberTable.append(html);
         }
       };
+
+      $('#btn-place-search').click(function() {
+        var place = $('#text-place').val();
+
+        $.ajax({
+          url: '/api/naver/location',
+          method: 'get',
+          dataType: 'json',
+          data: {
+            'localName': place
+          },
+          success: function(response) {
+            var items = response['message']['items'];
+            var regex = /(<([^>]+)>)/ig;
+            var select = $('#select-location');
+
+            for (var i = 0; i < items.length; i++) {
+              var location = items[i];
+              var address = location['address'];
+              var title = location['title'].replace(regex, "");
+
+              select.append($('<option>', {
+                value: address,
+                text: title
+              }));
+            }
+            console.log(response);
+          }
+        });
+      });
+
+      $('#select-location').change(function() {
+        var myaddress = $(this).val();
+        var name = $(this).find("option:selected").text();
+
+        console.log(name);
+        console.log(myaddress);
+
+        naver.maps.Service.geocode({address: myaddress}, function(status, response) {
+          var result = response.result;
+          var myaddr = new naver.maps.Point(result.items[0].point.x, result.items[0].point.y);
+          map.setCenter(myaddr);
+
+          var marker = new naver.maps.Marker({
+            position: myaddr,
+            map: map
+          });
+
+          naver.maps.Event.addListener(marker, "click", function(e) {
+            if (infowindow.getMap()) {
+              infowindow.close();
+            } else {
+              infowindow.open(map, marker);
+            }
+          });
+
+          var infowindow = new naver.maps.InfoWindow({
+            content: '<h5>' + name +'</h5>'
+          });
+
+          infowindow.open(map, marker);
+
+        });
+      });
+
+      $('#btn-check-meeting').click(function() {
+        window.location.replace('/team/meeting/' + no);
+      });
+
+
+      $(document).ready(function() {
+        var clicks = 0;
+        var dayIndex;
+        var startTime;
+        var endTime;
+        var day;
+
+        $('#timetable tr td').click(function() {
+          _date = new Date(startDate);
+
+          if (startDate == undefined || endDate == undefined) {
+            alert('날짜를 선택하세요');
+            return;
+          }
+
+          if ($('#select-location').val() == null) {
+            alert('장소를 선택하세요');
+            return;
+          }
+
+          if ($(this).attr('class') == 'red' || $(this).attr('class') == 'blue') {
+            alert('이미 해당시간에 일정이 존재합니다.');
+            return;
+          }
+
+          if (clicks == 0) {
+            dayIndex = $(this).index() - 1;
+            startTime = $($(this).siblings()[0]).data()['time'];
+            $(this).addClass('green');
+            clicks++;
+          } else {
+            if (dayIndex != $(this).index() - 1) {
+              alert('같은 요일을 선택해주세요.');
+              clicks = 0;
+              return;
+            }
+
+            _date = new Date(_date.setDate(_date.getDate() + dayIndex));
+
+            day = indexToDay(dayIndex);
+            endTime = $($(this).siblings()[0]).data()['time'];
+            $(this).addClass('green');
+            clicks = 0;
+
+            // swap startTime and endTime
+            if (hourCodeToHour(startTime) > hourCodeToHour(endTime)) {
+              var temp = startTime;
+              startTime = endTime;
+              endTime = temp;
+            }
+            scheduleModalPopupToTeam(day, changeDateToString(_date), startTime, endTime, $('#select-location').find("option:selected").text());
+
+            $('#modal-schedule-write').click(function() {
+              scheduleWriteToTeam(new Date(_date));
+            });
+          }
+        });
+      });
     </script>
 </body>
 

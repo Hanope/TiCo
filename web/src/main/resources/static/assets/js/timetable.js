@@ -74,6 +74,17 @@ function createTable(response, color) {
   });
 }
 
+function createTableOneSchedule(response, color) {
+  var schedule = response['schedule'];
+  var dayIndex = dayToIndex(schedule['day']);
+
+  schedule['hours'].forEach(function(hour, indexOfHour) {
+    var hourCode = hour['hourCode'];
+    var selector = '.time[data-time="' + hourCode + '"]';
+    $($(selector).siblings()[dayIndex]).addClass(color);
+  });
+}
+
 function scheduleModalPopup(day, startTime, endTime) {
   $('#modal-schedule-text').val('');
   $('#modal-schedule-day').text(day);
@@ -81,6 +92,18 @@ function scheduleModalPopup(day, startTime, endTime) {
   $('#modal-schedule-start-hourCode').text(startTime);
   $('#modal-schedule-end-time').text(hourCodeToHour(endTime) + ' - ');
   $('#modal-schedule-end-hourCode').text(endTime);
+  $('#modal-schedule').modal();
+}
+
+function scheduleModalPopupToTeam(day, date, startTime, endTime, location) {
+  $('#modal-schedule-text').val('');
+  $('#modal-schedule-day').text(day);
+  $('#modal-schedule-date').text(date);
+  $('#modal-schedule-start-time').text(hourCodeToHour(startTime) + ' - ');
+  $('#modal-schedule-start-hourCode').text(startTime);
+  $('#modal-schedule-end-time').text(hourCodeToHour(endTime) + ' - ');
+  $('#modal-schedule-end-hourCode').text(endTime);
+  $('#modal-schedule-location').text(location);
   $('#modal-schedule').modal();
 }
 
@@ -133,6 +156,61 @@ function scheduleWrite() {
     }
   });
 }
+
+function scheduleWriteToTeam(_date) {
+  var title = $('#modal-schedule-title').val();
+  var content = $('#modal-schedule-content').val();
+  var day = $('#modal-schedule-day').text();
+  var startHourCode = $('#modal-schedule-start-hourCode').text();
+  var endHourCode = $('#modal-schedule-end-hourCode').text();
+  var startIndex = hourCodeToIndex(startHourCode);
+  var endIndex = hourCodeToIndex(endHourCode);
+  var location_address = $('#select-location').val();
+  var location_name = $('#select-location').find("option:selected").text();
+  var hours = [];
+
+  for (; startIndex <= endIndex; startIndex++)
+    hours.push(indexToHourCode(startIndex));
+
+  var d = JSON.stringify({
+    "content": content,
+    "date": _date,
+    "location": {
+      "address": location_address,
+      "name": location_name
+    },
+    "schedule": {
+        "day": day,
+        "hours": hours,
+        "name": content
+      },
+    "title": title
+  });
+
+  console.log(d);
+
+  $.ajax({
+    url: '/api/team/' + no + '/schedule',
+    type: 'POST',
+    dataType: 'json',
+    contentType: 'application/json; charset=UTF-8',
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader('TiCo-Token', token);
+    },
+    data: d,
+    success: function(response) {
+      var result = response['result'];
+
+      if (!result)
+        alert(response['message']);
+      else
+        alert('시간표가 추가되었습니다.');
+
+      location.reload();
+    }
+  });
+}
+
 
 $('#search_btn').click(function(event) {
   event.preventDefault();

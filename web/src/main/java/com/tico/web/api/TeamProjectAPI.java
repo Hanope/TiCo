@@ -25,6 +25,11 @@ public class TeamProjectAPI {
   @Autowired
   private TeamProjectService teamProjectService;
 
+  @GetMapping()
+  public ResponseEntity<ResponseMessage> getAllTeamProject(@RequestHeader(value="TiCo-Token") String token) {
+    return teamProjectService.getAllTeamProject(token);
+  }
+
   @PostMapping()
   public ResponseEntity<ResponseMessage> createNewProject(@RequestBody Map<String, String> name, @RequestHeader(value="TiCo-Token") String token) {
     return teamProjectService.createNewProject(token, name.get("name"));
@@ -39,6 +44,12 @@ public class TeamProjectAPI {
   @GetMapping("/{teamNo}/schedule/{date}")
   public ResponseEntity<ResponseMessage> getScheduleByDate(@PathVariable Long teamNo, @PathVariable String date, @RequestHeader(value="TiCo-Token") String token) {
     return teamProjectService.getTeamScheduleByDate(teamNo, date, token);
+  }
+
+  // 날짜 사이의 회의 일정
+  @GetMapping("/{teamNo}/schedule/{startDate}/{endDate}")
+  public ResponseEntity<ResponseMessage> getScheduleByDate(@PathVariable Long teamNo, @PathVariable String startDate, @PathVariable String endDate, @RequestHeader(value="TiCo-Token") String token) {
+    return teamProjectService.getTeamScheduleByStartAndEndDate(teamNo, startDate, endDate, token);
   }
 
   @PostMapping("/{teamNo}/schedule")

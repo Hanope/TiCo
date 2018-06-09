@@ -33,9 +33,10 @@ public class TeamSchedule {
   @JoinTable(name = "team_schedule_location")
   private Location location;
 
-  @OneToMany(fetch = FetchType.LAZY)
+//  @OneToMany(fetch = FetchType.LAZY)
+  @OneToOne
   @JoinTable(name = "team_timetable_schedule")
-  private List<Schedule> schedules;
+  private Schedule schedule;
 
   private String title;
 

@@ -1312,3 +1312,12 @@ var jsCalendar = (function(){
         jsCalendar.autoFind();
     }, false);
 })();
+
+function changeDateToString(date) {
+  var gYear = date.getFullYear();
+  var gMonth = date.getMonth() + 1;
+  var gDate = date.getDate();
+  var clickedDate = gYear + pad(gMonth, 2) + pad(gDate, 2);
+
+  return clickedDate;
+}
