@@ -3,7 +3,6 @@ package com.tico.web.api;
 import com.tico.web.model.ResponseMessage;
 import com.tico.web.model.timetable.SyncTimetableDTO;
 import com.tico.web.service.TimetableService;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +26,7 @@ public class TimetableAPI {
   }
 
   @PostMapping("/sync")
-  public ResponseEntity<ResponseMessage> sync(@RequestBody SyncTimetableDTO timetableDTO) {
-    return timetableService.syncTimetable(timetableDTO);
+  public ResponseEntity<ResponseMessage> sync(@RequestBody SyncTimetableDTO timetableDTO, @RequestHeader(value="TiCo-Token") String token) {
+    return timetableService.syncTimetable(timetableDTO, token);
   }
 }

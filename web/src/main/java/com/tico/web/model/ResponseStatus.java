@@ -26,6 +26,8 @@ public interface ResponseStatus {
 
   String SUCCESS_UPDATE_REPRESENT_TIMETABLE = "대표 시간표로 설정되었습니다";
 
+  String SUCCESS_DELETE_SCHEDULE = "일정이 삭제되었습니다.";
+
   String SERVER_ERROR = "Server Error";
 
   String INVALID_TOKEN = "토큰이 유효하지 않습니다.";

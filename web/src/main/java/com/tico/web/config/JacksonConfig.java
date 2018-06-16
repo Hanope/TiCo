@@ -1,7 +1,6 @@
 package com.tico.web.config;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -24,7 +23,7 @@ public class JacksonConfig {
     module.addSerializer(LocalDate.class, new JsonSerializer<LocalDate>() {
       @Override
       public void serialize(LocalDate localDate, JsonGenerator jsonGenerator,
-          SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+          SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeString(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(localDate));
       }
     });
@@ -32,7 +31,7 @@ public class JacksonConfig {
     module.addSerializer(LocalTime.class, new JsonSerializer<LocalTime>() {
       @Override
       public void serialize(LocalTime localTime, JsonGenerator jsonGenerator,
-          SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+          SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeString(DateTimeFormatter.ofPattern("kk:mm:ss").format(localTime));
       }
     });
@@ -40,7 +39,7 @@ public class JacksonConfig {
     module.addSerializer(LocalDateTime.class, new JsonSerializer<LocalDateTime>() {
       @Override
       public void serialize(LocalDateTime localDateTime, JsonGenerator jsonGenerator,
-          SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+          SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeString(DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss").format(localDateTime));
       }
     });

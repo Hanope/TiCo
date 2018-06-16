@@ -59,4 +59,8 @@ public class Timetable {
     }
     return dayHours;
   }
+
+  public void deleteSchedule(Schedule schedule) {
+    schedules.remove(schedule);
+  }
 }

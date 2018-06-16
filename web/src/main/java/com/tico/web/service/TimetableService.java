@@ -33,9 +33,6 @@ public class TimetableService {
   private UserRepository userRepository;
 
   @Autowired
-  private UserService userService;
-
-  @Autowired
   private SessionUser sessionUser;
 
   @Transactional
@@ -52,10 +49,9 @@ public class TimetableService {
     return timetable;
   }
 
-  @Transactional
-  public ResponseEntity<ResponseMessage> syncTimetable(SyncTimetableDTO timetable) {
+  public ResponseEntity<ResponseMessage> syncTimetable(SyncTimetableDTO timetable, String token) {
+    User user = sessionUser.getUserByToken(token);
     ResponseMessage result;
-    User user = sessionUser.getCurrentUser();
 
     Timetable newTimetable = Timetable.builder()
         .name(timetable.getName())
@@ -66,8 +62,12 @@ public class TimetableService {
     newTimetable.setSchedules(schedules);
     newTimetable.setUser(user);
 
-    result = new ResponseMessage(true, timetableRepository.save(newTimetable));
-    return new ResponseEntity<ResponseMessage>(result, HttpStatus.CREATED);
+    newTimetable = timetableRepository.save(newTimetable);
+    user.addTimetable(newTimetable);
+    userRepository.save(user);
+
+    result = new ResponseMessage(true, newTimetable);
+    return new ResponseEntity<>(result, HttpStatus.CREATED);
   }
 
   private List<Schedule> addSchedule(List<ScheduleDTO> schedulesDTO) {
@@ -103,18 +103,18 @@ public class TimetableService {
 
     if (user == null) {
       result = new ResponseMessage(false, INVALID_TOKEN);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+      return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
 
     Timetable timetable = timetableRepository.findOne(no);
 
     if (timetable == null) {
       result = new ResponseMessage(false, ResponseStatus.NOT_FOUND_TIMETABLE);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     result = new ResponseMessage(true, timetable);
-    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
 }

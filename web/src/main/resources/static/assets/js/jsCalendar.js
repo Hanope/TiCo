@@ -33,15 +33,14 @@ var jsCalendar = (function(){
         // No parameters
         if (arguments.length === 0) {
             // Do nothing
-            return;
+
         }
         else {
             // Construct calendar
             this._construct(arguments);
         }
-    };
-
-    // Version
+    }
+  // Version
     JsCalendar.version = "v1.4.2";
 
     // Sub-Constructor

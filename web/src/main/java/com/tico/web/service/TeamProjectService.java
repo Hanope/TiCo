@@ -71,7 +71,7 @@ public class TeamProjectService {
 
     if (user == null) {
       result = new ResponseMessage(false, INVALID_TOKEN);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+      return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
 
     for (TeamProject teamProject : user.getTeamProjects()) {
@@ -79,7 +79,7 @@ public class TeamProjectService {
     }
 
     result = new ResponseMessage(true, teamProjects);
-    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   public ResponseEntity<ResponseMessage> createNewProject(String projectName, String token) {
@@ -88,7 +88,7 @@ public class TeamProjectService {
 
     if (user == null) {
       result = new ResponseMessage(false, INVALID_TOKEN);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+      return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
 
     TeamProject teamProject = TeamProjectDTO.builder()
@@ -97,7 +97,7 @@ public class TeamProjectService {
         .build()
         .toEntity();
     result = new ResponseMessage(true, teamProject);
-    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   public ResponseEntity<ResponseMessage> getTeamMembers(Long projectNo, String token) {
@@ -106,19 +106,19 @@ public class TeamProjectService {
 
     if (user == null) {
       result = new ResponseMessage(false, INVALID_TOKEN);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+      return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
 
     TeamProject teamProject = teamProjectRepository.findOne(projectNo);
 
     if (teamProject == null) {
       result = new ResponseMessage(false, NOT_FOUND_PROJECT);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     List<UserDTO> members = this.getTeamMembers(teamProject);
     result = new ResponseMessage(true, members);
-    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   private List<UserDTO> getTeamMembers(TeamProject teamProject) {
@@ -137,20 +137,20 @@ public class TeamProjectService {
 
     if (user == null) {
       result = new ResponseMessage(false, INVALID_TOKEN);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+      return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
 
     TeamProject teamProject = teamProjectRepository.findOne(projectNo);
 
     if (teamProject == null) {
       result = new ResponseMessage(false, NOT_FOUND_PROJECT);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     List<TimetableDTO> timetables = this.getTimetableList(teamProject);
     result = new ResponseMessage(true, timetables);
 
-    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   public ResponseEntity<ResponseMessage> addMember(Long projectNo, String userId, String token) {
@@ -159,7 +159,7 @@ public class TeamProjectService {
 
     if (user == null) {
       result = new ResponseMessage(false, INVALID_TOKEN);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+      return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
 
     TeamProject teamProject = teamProjectRepository.findOne(projectNo);
@@ -168,28 +168,28 @@ public class TeamProjectService {
 
     if (teamProject == null) {
       result = new ResponseMessage(false, NOT_FOUND_PROJECT);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     if (!isOwner(teamProject.getOwner(), owner)) {
       result = new ResponseMessage(false, CAN_NOT_UPDATE_PROJECT_MEMBER);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+      return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
 
     if (newUser == null) {
       result = new ResponseMessage(false, NOT_FOUND_USER);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     if (isExistsMember(teamProject, newUser)) {
       result = new ResponseMessage(false, EXISTS_MEMBER);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<>(result, HttpStatus.FORBIDDEN);
     }
 
     teamProject.addMember(newUser);
     teamProjectRepository.save(teamProject);
     result = new ResponseMessage(true, newUser.getName() + "님이 추가되었습니다.");
-    return new ResponseEntity<ResponseMessage>(result, HttpStatus.CREATED);
+    return new ResponseEntity<>(result, HttpStatus.CREATED);
   }
 
   private boolean isExistsMember(TeamProject teamProject, User user) {
@@ -203,44 +203,41 @@ public class TeamProjectService {
 
     if (user == null) {
       result = new ResponseMessage(false, INVALID_TOKEN);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+      return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
 
     TeamProject teamProject = teamProjectRepository.findOne(projectNo);
 
     if (teamProject == null) {
       result = new ResponseMessage(false, NOT_FOUND_PROJECT);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     User deleteUser = userRepository.findOneById(userId);
 
     if (!isOwner(teamProject.getOwner(), user)) {
       result = new ResponseMessage(false, CAN_NOT_UPDATE_PROJECT_MEMBER);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+      return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
 
     if (deleteUser == null || !isExistsMember(teamProject, deleteUser)) {
       result = new ResponseMessage(false, NOT_FOUND_USER);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     if (isOwner(teamProject.getOwner(), deleteUser)) {
       result = new ResponseMessage(false, CAN_NOT_DELETE_PROJECT_OWNER);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<>(result, HttpStatus.FORBIDDEN);
     }
 
     teamProject.deleteMember(deleteUser);
     teamProjectRepository.save(teamProject);
     result = new ResponseMessage(true, deleteUser.getName() + "님이 삭제되었습니다.");
-    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   private boolean isOwner(User projectOwner, User sessionUser) {
-    if (projectOwner.getId().equals(sessionUser.getId()))
-      return true;
-    else
-      return false;
+    return projectOwner.getId().equals(sessionUser.getId());
   }
 
   private List<TimetableDTO> getTimetableList(TeamProject teamProject) {
@@ -278,7 +275,7 @@ public class TeamProjectService {
 
     if (user == null) {
       result = new ResponseMessage(false, INVALID_TOKEN);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+      return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
 
     TeamProject teamProject = teamProjectRepository.findOne(teamNo);
@@ -286,16 +283,16 @@ public class TeamProjectService {
 
     if (teamProject == null) {
       result = new ResponseMessage(false, NOT_FOUND_PROJECT);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     if (teamSchedules.size() == 0) {
       result = new ResponseMessage(false, NOT_FOUND_SCHEDULE);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
+      return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     result = new ResponseMessage(true, teamSchedules);
-    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   private List<TeamSchedule> getSchedulesAfterToday(List<TeamSchedule> teamSchedule) {
@@ -316,14 +313,14 @@ public class TeamProjectService {
 
     if (user == null) {
       result = new ResponseMessage(false, INVALID_TOKEN);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+      return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
 
     TeamProject teamProject = teamProjectRepository.findOne(teamNo);
 
     if (teamProject == null) {
       result = new ResponseMessage(false, NOT_FOUND_PROJECT);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     List<TeamSchedule> teamSchedules = teamProject.getTeamSchedule();
@@ -331,11 +328,11 @@ public class TeamProjectService {
 
     if (schedules.size() == 0) {
       result = new ResponseMessage(false, NOT_FOUND_SCHEDULE);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     result = new ResponseMessage(true, schedules);
-    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   public ResponseEntity<ResponseMessage> getTeamScheduleByStartAndEndDate(Long teamNo, String startDate, String endDate, String token) {
@@ -344,14 +341,14 @@ public class TeamProjectService {
 
     if (user == null) {
       result = new ResponseMessage(false, INVALID_TOKEN);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+      return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
 
     TeamProject teamProject = teamProjectRepository.findOne(teamNo);
 
     if (teamProject == null) {
       result = new ResponseMessage(false, NOT_FOUND_PROJECT);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     List<TeamSchedule> teamSchedules = teamProject.getTeamSchedule();
@@ -359,20 +356,15 @@ public class TeamProjectService {
 
     if (schedules.size() == 0) {
       result = new ResponseMessage(false, NOT_FOUND_SCHEDULE);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     result = new ResponseMessage(true, schedules);
-    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   private List<TeamSchedule> getTeamScheduleByDate(List<TeamSchedule> teamSchedules, String date) {
     List<TeamSchedule> teamScheduleList = new ArrayList<>();
-
-//    for (TeamSchedule teamSchedule : teamSchedules) {
-//      if (teamSchedule.getCompareDate().equals(date))
-//        teamScheduleList.add(teamSchedule);
-//    }
 
     try {
       Date cDate = new SimpleDateFormat("yyyyMMdd").parse(date);
@@ -407,7 +399,7 @@ public class TeamProjectService {
 
     if (user == null) {
       result = new ResponseMessage(false, INVALID_TOKEN);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+      return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
 
     TeamProject teamProject = teamProjectRepository.findOne(teamNo);
@@ -415,16 +407,16 @@ public class TeamProjectService {
 
     if (teamProject == null) {
       result = new ResponseMessage(false, NOT_FOUND_PROJECT);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     if (teamSchedules.size() == 0) {
       result = new ResponseMessage(false, NOT_FOUND_SCHEDULE);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     result = new ResponseMessage(true, teamSchedules);
-    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   // TODO 프로젝트 시간표를 가져와야하는 동시에 개인 시간표도 모두 가져와야 함, 그다음 시간이 겹치는지 확인하고 겹치면 추가 X 날짜는 어떻게,,?
@@ -438,7 +430,7 @@ public class TeamProjectService {
 
     if (user == null) {
       result = new ResponseMessage(false, INVALID_TOKEN);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+      return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
 
     TeamProject teamProject = teamProjectRepository.findOne(teamNo);
@@ -447,7 +439,7 @@ public class TeamProjectService {
 
     if (teamProject == null) {
       result = new ResponseMessage(false, NOT_FOUND_PROJECT);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     List<Schedule> scheduleList = new ArrayList<>();
@@ -459,16 +451,14 @@ public class TeamProjectService {
     }
 
     for (TimetableDTO timetableDTO : getTimetableList(teamProject)) {
-      for (Schedule schedule : timetableDTO.getSchedules()) {
-        scheduleList.add(schedule);
-      }
+      scheduleList.addAll(timetableDTO.getSchedules());
     }
     isScheduled = isExistSchedule(scheduleList, newTeamSchedule.getSchedule());
 
 
     if (isScheduled) {
       result = new ResponseMessage(false, EXISTS_SCHEDULE);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.CREATED);
+      return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
 
@@ -482,7 +472,7 @@ public class TeamProjectService {
     teamProjectRepository.save(teamProject);
 
     result = new ResponseMessage(true, SUCCESS_ADD_SCHEDULE);
-    return new ResponseEntity<ResponseMessage>(result, HttpStatus.CREATED);
+    return new ResponseEntity<>(result, HttpStatus.CREATED);
   }
 
   private boolean isExistSchedule(List<Schedule> timetableSchedules, Schedule newSchedule) {

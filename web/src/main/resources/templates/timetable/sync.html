@@ -298,9 +298,6 @@
       url: 'http://localhost:8000/timetable?user_id=' + id + '&user_password=' + password,
       method: 'get',
       dataType: 'json',
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader('TiCo-Token', token);
-      },
       success: function (response) {
         console.log(response);
 
@@ -336,8 +333,7 @@
 
       day_index++;
     }
-  };
-
+  }
   $('#btn-save').click(function () {
     var data = parseTimetableToServer(syncTimetableData);
 

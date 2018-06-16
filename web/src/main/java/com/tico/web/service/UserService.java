@@ -41,13 +41,13 @@ public class UserService {
 
     if (name == null) {
       result = new ResponseMessage(false, INVALID_INPUT);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<>(result, HttpStatus.FORBIDDEN);
     }
 
     List<User> userList = userRepository.findByNameOrId(name, name);
     if (userList.size() == 0) {
       result = new ResponseMessage(false, NOT_FOUND_USER);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     List<UserDTO> userDTOList = new ArrayList<>();
@@ -57,7 +57,7 @@ public class UserService {
     }
 
     result = new ResponseMessage(true, userDTOList);
-    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   public boolean join(UserJoinDTO userJoinDTO) {
@@ -76,24 +76,24 @@ public class UserService {
 
     if (user == null) {
       result = new ResponseMessage(false, INVALID_TOKEN);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+      return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
     }
 
     Timetable timetable = timetableRepository.findOne(no);
 
     if (timetable == null) {
       result = new ResponseMessage(false, NOT_FOUND_USER);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
     }
 
     if (user.getId() != timetable.getUser().getId()) {
       result = new ResponseMessage(false, CAN_NOT_UPDATE_OTHER_TIMETABLE);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<>(result, HttpStatus.FORBIDDEN);
     }
 
     user.setTimetable(timetable);
     userRepository.save(user);
     result = new ResponseMessage(true, SUCCESS_UPDATE_REPRESENT_TIMETABLE);
-    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 }

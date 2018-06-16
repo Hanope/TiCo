@@ -22,11 +22,11 @@ public class NaverAPIService {
 
     if (apiResult == null) {
       result = new ResponseMessage(false, ResponseStatus.SERVER_ERROR);
-      return new ResponseEntity<ResponseMessage>(result, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<>(result, HttpStatus.FORBIDDEN);
     }
 
     result = new ResponseMessage(true, apiResult);
-    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   public JsonNode requestAPI(String localName) {
@@ -53,7 +53,7 @@ public class NaverAPIService {
       }
 
       String inputLine;
-      StringBuffer response = new StringBuffer();
+      StringBuilder response = new StringBuilder();
       while ((inputLine = br.readLine()) != null) {
         response.append(inputLine);
       }

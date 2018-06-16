@@ -36,6 +36,11 @@ public class ScheduleService {
     User user = sessionUser.getUserByToken(token);
     Timetable timetable = timetableRepository.findOne(no);
 
+    if (user == null) {
+      result = new ResponseMessage(false, INVALID_TOKEN);
+      return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
+    }
+
     if (timetable == null) {
       result = new ResponseMessage(false, NOT_FOUND_TIMETABLE);
       return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
@@ -71,9 +76,6 @@ public class ScheduleService {
       addScheduleToTimetable(timetable, addedSchedule);
       result = new ResponseMessage(true, SUCCESS_ADD_SCHEDULE);
       return new ResponseEntity<ResponseMessage>(result, HttpStatus.CREATED);
-//      result.put("result", true);
-//      result.put("message", "일정이 추가되었습니다.");
-//      result.put("data", addedSchedule);
     }
   }
 
@@ -112,4 +114,29 @@ public class ScheduleService {
     return similar.size() > 0;
   }
 
+  public ResponseEntity<ResponseMessage> deleteSchedule(Long timetableNo, Long scheduleNo, String token) {
+    ResponseMessage result;
+    User user = sessionUser.getUserByToken(token);
+    Timetable timetable = timetableRepository.findOne(timetableNo);
+    Schedule schedule = scheduleRepository.findOne(scheduleNo);
+
+    if (user == null) {
+      result = new ResponseMessage(false, INVALID_TOKEN);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+    }
+
+    if (schedule == null) {
+      result = new ResponseMessage(false, NOT_FOUND_SCHEDULE);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.NOT_FOUND);
+    } else if (!isUsersTimetalbe(user, timetable.getUser())) {
+      result = new ResponseMessage(false, CAN_NOT_UPDATE_OTHER_TIMETABLE);
+      return new ResponseEntity<ResponseMessage>(result, HttpStatus.UNAUTHORIZED);
+    }
+
+    timetable.deleteSchedule(schedule);
+    timetableRepository.save(timetable);
+
+    result = new ResponseMessage(true, SUCCESS_DELETE_SCHEDULE);
+    return new ResponseEntity<ResponseMessage>(result, HttpStatus.OK);
+  }
 }

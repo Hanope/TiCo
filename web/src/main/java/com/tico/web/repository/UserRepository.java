@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-  public List<User> findByNameOrId(String name, String id);
+  List<User> findByNameOrId(String name, String id);
 
-  public boolean existsById(String id);
+  boolean existsById(String id);
 
-  public User findOneById(String id);
+  User findOneById(String id);
 
-  public User findOneByToken(String token);
+  User findOneByToken(String token);
 }
